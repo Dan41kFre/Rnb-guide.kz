@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Обучение — R&B Archive</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ── learn.css — стили ТОЛЬКО для learn.html ── */
+    body.has-bar-player { padding-bottom: 80px; }
+
+    /* ── Not Found ── */
+    .lp-notfound {
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 20px;
+      padding: 40px 24px;
+    }
+    .lp-notfound__icon { font-size: 3.5rem; color: var(--accent); opacity: .4; }
+
+    /* ── Article List (when no id) ── */
+    .lp-list {
+      padding: 100px 0 80px;
+    }
+    .lp-list__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .lp-list-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color var(--transition), transform var(--transition);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .lp-list-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .lp-list-card__tag {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(124,58,237,.13);
+      border-radius: 999px;
+      padding: 4px 12px;
+      align-self: flex-start;
+    }
+    .lp-list-card__title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .lp-list-card__desc {
+      font-size: .88rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .lp-list-card__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+    .lp-list-card__time {
+      font-size: .78rem;
+      color: var(--text-dim);
+    }
+
+    /* ══════════════════════════════
+       HERO (статья)
+    ══════════════════════════════ */
+    .lp-hero {
+      position: relative;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 80px;
+      overflow: hidden;
+    }
+    .lp-hero__bg {
+      position: absolute;
+      inset: 0;
+      opacity: .18;
+    }
+    .lp-hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(10,10,12,.55) 0%, rgba(10,10,12,.97) 100%);
+    }
+    .lp-hero__inner {
+      position: relative;
+      z-index: 1;
+      padding-bottom: 52px;
+    }
+    .lp-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .78rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 28px;
+      transition: color .2s;
+    }
+    .lp-back:hover { color: var(--accent); }
+    .lp-tag {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(124,58,237,.15);
+      border-radius: 999px;
+      padding: 4px 12px;
+      margin-bottom: 14px;
+    }
+    .lp-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.9rem, 4.5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .lp-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .lp-meta__item {
+      font-size: .8rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 999px;
+      padding: 4px 13px;
+    }
+
+    /* ══════════════════════════════
+       ARTICLE BODY
+    ══════════════════════════════ */
+    .lp-body {
+      padding: 64px 0 80px;
+    }
+    .lp-body__layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 60px;
+      align-items: start;
+    }
+    .lp-content {
+      max-width: 760px;
+    }
+    .lp-content h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin: 36px 0 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+    .lp-content h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 28px 0 10px;
+      color: var(--accent-h);
+    }
+    .lp-content p {
+      font-size: .94rem;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+    .lp-content ul, .lp-content ol {
+      padding-left: 0;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .lp-content ul li, .lp-content ol li {
+      font-size: .92rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      padding-left: 20px;
+      position: relative;
+    }
+    .lp-content ul li::before {
+      content: '◈';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: .6rem;
+      top: 5px;
+    }
+    .lp-content ol { counter-reset: ol-counter; }
+    .lp-content ol li { counter-increment: ol-counter; }
+    .lp-content ol li::before {
+      content: counter(ol-counter) '.';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: .82rem;
+      font-weight: 700;
+    }
+    .lp-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 12px 20px;
+      background: rgba(124,58,237,.06);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 24px 0;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: .92rem;
+      line-height: 1.75;
+    }
+    .lp-content .highlight-box {
+      background: var(--bg-card-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin: 28px 0;
+    }
+    .lp-content .highlight-box strong {
+      font-family: 'Syne', sans-serif;
+      font-size: .85rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 8px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    /* Sidebar */
+    .lp-sidebar {
+      position: sticky;
+      top: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .lp-sidebar__box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+    .lp-sidebar__box h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+    .lp-sidebar__toc {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .lp-sidebar__toc li a {
+      font-size: .84rem;
+      color: var(--text-muted);
+      transition: color .2s;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .lp-sidebar__toc li a::before {
+      content: '◈';
+      color: var(--accent);
+      font-size: .58rem;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .lp-sidebar__toc li a:hover { color: var(--accent-h); }
+    .lp-related-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .lp-related-list li a {
+      font-size: .85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      transition: color .2s;
+      display: block;
+    }
+    .lp-related-list li a:hover { color: var(--accent-h); }
+    .lp-related-list li .lp-related-tag {
+      font-size: .68rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Glossary table */
+    .lp-glossary {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .lp-glossary th {
+      font-family: 'Syne', sans-serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--accent);
+      background: rgba(124,58,237,.06);
+    }
+    .lp-glossary td {
+      font-size: .87rem;
+      color: var(--text-muted);
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+      vertical-align: top;
+    }
+    .lp-glossary tr:hover td { background: rgba(255,255,255,.02); }
+    .lp-glossary .term {
+      font-weight: 600;
+      color: var(--text);
+      font-size: .9rem;
+    }
+
+    /* Progress nav */
+    .lp-nav-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .lp-nav-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 260px;
+    }
+    .lp-nav-btn span {
+      font-size: .72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .lp-nav-btn a {
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--accent);
+      transition: color .2s;
+    }
+    .lp-nav-btn a:hover { color: var(--accent-h); }
+    .lp-nav-btn--right { text-align: right; margin-left: auto; }
+
+    /* ══ Responsive ══ */
+    @media (max-width: 900px) {
+      .lp-body__layout { grid-template-columns: 1fr; }
+      .lp-sidebar { position: static; }
+    }
+    @media (max-width: 480px) {
+      .lp-title { font-size: 1.6rem; }
+      .lp-hero { min-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════════════════ -->
+<header class="header scrolled" id="header">
+  <div class="header__inner">
+    <a href="index.html" class="logo">
+      <span class="logo__icon">◈</span>
+      <span class="logo__text">R&amp;B <span class="logo__accent">Archive</span></span>
+    </a>
+    <nav class="nav" id="nav">
+      <ul class="nav__list">
+        <li><a href="index.html"             class="nav__link" data-i18n="nav.home">Главная</a></li>
+        <li><a href="index.html#artists"     class="nav__link" data-i18n="nav.artists">Артисты</a></li>
+        <li><a href="index.html#newreleases" class="nav__link" data-i18n="nav.new">Новинки</a></li>
+        <li><a href="index.html#learn"       class="nav__link nav__link--active" data-i18n="nav.learn">Обучение</a></li>
+        <li><a href="index.html#playlists"   class="nav__link" data-i18n="nav.playlists">Плейлисты</a></li>
+        <li><a href="index.html#news"        class="nav__link" data-i18n="nav.news">Новости</a></li>
+      </ul>
+    </nav>
+    <div class="header__search">
+      <span class="search-icon">⌕</span>
+      <input type="text" class="header__search-input" placeholder="Поиск артистов, треков…"/>
+    </div>
+    <div class="header__right">
+      <button class="btn btn--ghost btn--sm"   onclick="location.href='auth.html'" data-i18n="auth.login">Вход</button>
+      <button class="btn btn--primary btn--sm" onclick="location.href='auth.html?tab=register'" data-i18n="auth.register">Регистрация</button>
+    
+      <div class="lang-switch">
+        <button class="lang-btn lang-btn--active" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="tr">TR</button>
+        <button class="lang-btn" data-lang="kz">KZ</button>
+      </div>
+    </div>
+    <button class="burger" id="burger" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════ NOT FOUND ══════════════════════════= -->
+<div class="lp-notfound" id="lpNotFound">
+  <span class="lp-notfound__icon">◈</span>
+  <h1 data-i18n="lp.notfound">Статья не найдена</h1>
+  <p>Проверь URL или вернись к списку</p>
+  <a href="learn.html" class="btn btn--primary btn--lg" data-i18n="lp.back">← К обучению</a>
+</div>
+
+<!-- ═══════════════════ ARTICLE LIST (no id) ══════════════= -->
+<main id="lpList" style="display:none">
+  <section class="lp-list">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Обучающий блок</h2>
+        <span class="section-link">5 статей</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:.95rem;margin-top:-24px;margin-bottom:0">
+        Изучай историю, теорию и культуру R&amp;B — от истоков до современности.
+      </p>
+      <div class="lp-list__grid" id="lpListGrid"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════════ ARTICLE PAGE ══════════════════════= -->
+<main id="lpMain" style="display:none">
+
+  <!-- Hero -->
+  <section class="lp-hero">
+    <div class="lp-hero__bg" id="lpHeroBg"></div>
+    <div class="lp-hero__overlay"></div>
+    <div class="container lp-hero__inner">
+      <a href="learn.html" class="lp-back">← Назад к обучению</a>
+      <span class="lp-tag"  id="lpTag"></span>
+      <h1 class="lp-title" id="lpTitle"></h1>
+      <div class="lp-meta" id="lpMeta"></div>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <section class="lp-body">
+    <div class="container lp-body__layout">
+      <article class="lp-content" id="lpContent"></article>
+      <aside class="lp-sidebar">
+        <div class="lp-sidebar__box" id="lpTocBox">
+          <h4>Содержание</h4>
+          <ul class="lp-sidebar__toc" id="lpToc"></ul>
+        </div>
+        <div class="lp-sidebar__box">
+          <h4>Другие статьи</h4>
+          <ul class="lp-related-list" id="lpRelated"></ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer__accent-bar"></div>
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="logo"><span class="logo__icon">◈</span><span class="logo__text">R&amp;B <span class="logo__accent">Archive</span></span></a>
+        <p class="footer__desc" data-i18n="footer.desc">Электронный учебный ресурс о Rhythm &amp; Blues — история, артисты, культура.</p>
+        <div class="footer__socials">
+          <a href="https://vk.com" class="social-btn" aria-label="VK"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.6c-.6 0-.79-.48-1.87-1.57-1-.93-1.39-1.06-1.63-1.06-.33 0-.43.1-.43.57v1.44c0 .4-.13.64-1.19.64-1.75 0-3.7-1.06-5.07-3.03C5.11 10.41 4.5 8.5 4.5 8.06c0-.24.1-.46.57-.46H6.7c.43 0 .59.2.75.66.83 2.4 2.2 4.5 2.77 4.5.21 0 .31-.1.31-.64V9.64c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.52c.36 0 .48.19.48.6v3.24c0 .36.16.48.26.48.21 0 .38-.12.76-.5 1.18-1.32 2.02-3.35 2.02-3.35.11-.24.31-.46.74-.46h1.6c.48 0 .59.25.48.6-.2.93-2.1 3.6-2.1 3.6-.17.27-.23.4 0 .7.17.23.72.7 1.09 1.13.68.77 1.2 1.41 1.34 1.86.13.44-.1.67-.55.67z"/></svg></a>
+          <a href="https://www.instagram.com" class="social-btn" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="https://www.youtube.com" class="social-btn" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__heading" data-i18n="footer.nav">Навигация</h4>
+        <ul class="footer__links">
+          <li><a href="index.html" data-i18n="nav.home">Главная</a></li>
+          <li><a href="index.html#artists" data-i18n="nav.artists">Артисты</a></li>
+          <li><a href="index.html#newreleases" data-i18n="nav.new">Новинки</a></li>
+          <li><a href="learn.html" data-i18n="nav.learn">Обучение</a></li>
+          <li><a href="index.html#playlists" data-i18n="nav.playlists">Плейлисты</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__heading" data-i18n="footer.contacts">Контакты</h4>
+        <ul class="footer__contacts">
+          <li><span class="footer__contact-icon">✉</span><a href="mailto:rbarchive@edu.kz">rbarchive@edu.kz</a></li>
+          <li><span class="footer__contact-icon">✆</span>+7 (700) 000-00-00</li>
+          <li><span class="footer__contact-icon">◎</span><span data-i18n="footer.city">Казахстан, Караганда</span></li>
+        </ul>
+        <div class="footer__lang">
+          <span class="footer__lang-label" data-i18n="footer.lang">Язык:</span>
+          <button class="lang-btn lang-btn--active" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="tr">TR</button>
+          <button class="lang-btn" data-lang="kz">KZ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <div class="container footer__bottom-inner">
+      <p data-i18n="footer.copy">© 2025 R&amp;B Archive. Дипломная работа. Все права защищены.</p>
+      <p class="footer__bottom-made" data-i18n="footer.made">Сделано с ♥ для R&amp;B культуры</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   learn.js — логика страницы обучения
+   ?id= → показывает статью
+   без id  → показывает список всех статей
+   ============================================================ */
+
+const ARTICLES = {
+
+  /* ── 1. История ─────────────────────────────────────────── */
+  history: {
+    id:    "history",
+    tag:   "История",
+    title: "Истоки R&B: от блюза к Motown",
+    time:  "12 мин чтения",
+    date:  "2025",
+    bg:    "linear-gradient(135deg,#1a0033,#7c3aed,#c026d3)",
+    toc: [
+      { href: "#s1", text: "Корни в афроамериканской музыке" },
+      { href: "#s2", text: "Что такое Rhythm & Blues?" },
+      { href: "#s3", text: "Эпоха Motown" },
+      { href: "#s4", text: "Распространение и влияние" },
+      { href: "#s5", text: "Наследие" },
+    ],
+    html: `
+      <p>Rhythm &amp; Blues — один из самых влиятельных жанров мировой музыки. Чтобы понять его суть, нужно вернуться в начало XX века, когда афроамериканские общины на юге США формировали уникальный музыкальный язык.</p>
+
+      <h2 id="s1">Корни в афроамериканской музыке</h2>
+      <p>R&B вырос из нескольких традиций, тесно переплетённых между собой. Главными «родителями» жанра стали:</p>
+      <ul>
+        <li><strong>Блюз</strong> — музыка, рождённая из горя и надежды, с характерными бентонами и пентатонными гаммами.</li>
+        <li><strong>Джаз</strong> — импровизация, сложные гармонии и свинг-ритм.</li>
+        <li><strong>Gospel</strong> — духовные песнопения, мощная вокальная экспрессия.</li>
+        <li><strong>Work songs и field hollers</strong> — рабочие песни, заложившие основу ритмических паттернов.</li>
+      </ul>
+      <p>Великая миграция 1910–1970-х годов перенесла эти традиции с сельского Юга в промышленные города Севера — Чикаго, Детройт, Нью-Йорк. Именно там, в тесных клубах и на маленьких лейблах, оформился новый жанр.</p>
+
+      <h2 id="s2">Что такое Rhythm &amp; Blues?</h2>
+      <p>Термин «Rhythm &amp; Blues» был введён журналом Billboard в 1949 году для описания музыки, популярной в афроамериканской аудитории — взамен более ранних, уничижительных категорий. Новое название отразило ключевые черты жанра:</p>
+      <div class="highlight-box">
+        <strong>Характерные элементы R&B</strong>
+        Выраженный акцент на биты 2 и 4 (backbeat), синкопированный ритм, экспрессивный вокал с мелизмами, использование духовых и электрогитары. Тексты охватывали темы любви, потери, радости и социального протеста.
+      </div>
+      <p>В 1950-х годах R&B оказал огромное влияние на рождение рок-н-ролла. Многие ранние рок-хиты белых исполнителей были каверами на композиции афроамериканских R&B-артистов.</p>
+
+      <h2 id="s3">Эпоха Motown</h2>
+      <p>В 1959 году Берри Горди основал в Детройте лейбл Motown Records. Это стало революцией: впервые R&B-музыка была систематически упакована, отполирована и продвинута для широкой аудитории — включая белых слушателей.</p>
+      <blockquote>«Мы создавали музыку для всех людей» — Берри Горди</blockquote>
+      <p>Motown дал миру Stevie Wonder, Марвина Гэя, The Supremes, The Temptations, The Four Tops. Саунд лейбла — чистое производство, запоминающиеся мелодии, сложная хоровая аранжировка — стал эталоном соула.</p>
+      <ul>
+        <li>1961 — первый #1-хит лейбла: Please Mr. Postman (The Marvelettes)</li>
+        <li>1964 — The Supremes покоряют Billboard Hot 100</li>
+        <li>1968 — Marvin Gaye выпускает «I Heard It Through the Grapevine»</li>
+      </ul>
+
+      <h2 id="s4">Распространение и влияние</h2>
+      <p>К концу 1960-х R&B эволюционировал в несколько направлений. Soul-движение, возглавляемое Джеймсом Брауном и Ареттой Франклин, добавило политическую остроту. Funk перевёл акцент на грув и танцевальность. Philadelphia Soul создал роскошный оркестровый звук.</p>
+      <p>В 1970–80-х появились диско и электронный R&B, а New Jack Swing объединил хип-хоп-биты с соул-вокалом. Каждое десятилетие приносило новые трансформации жанра, неизменно сохраняя его эмоциональный стержень.</p>
+
+      <h2 id="s5">Наследие</h2>
+      <p>Сегодня R&B — живой, глобальный жанр. Его ДНК прослеживается в поп-музыке, хип-хопе, электронике и beyond. Beyoncé, Frank Ocean, SZA, The Weeknd — все они стоят на плечах тех, кто пел блюз в клубах Чикаго 75 лет назад.</p>
+      <div class="lp-nav-bottom">
+        <div class="lp-nav-btn lp-nav-btn--right">
+          <span>Следующая статья</span>
+          <a href="learn.html?id=theory">Что делает трек R&B-звучащим? →</a>
+        </div>
+      </div>
+    `
+  },
+
+  /* ── 2. Теория ───────────────────────────────────────────── */
+  theory: {
+    id:    "theory",
+    tag:   "Теория",
+    title: "Что делает трек R&B-звучащим?",
+    time:  "8 мин чтения",
+    date:  "2025",
+    bg:    "linear-gradient(135deg,#001a33,#1e40af,#7c3aed)",
+    toc: [
+      { href: "#s1", text: "Грув и ритмическая основа" },
+      { href: "#s2", text: "Вокальные мелизмы" },
+      { href: "#s3", text: "Синкопы" },
+      { href: "#s4", text: "Сэмплирование" },
+      { href: "#s5", text: "Гармония и аккорды" },
+    ],
+    html: `
+      <p>Когда слышишь R&B-трек, ты узнаёшь его мгновенно. Но что именно создаёт это ощущение? Разберём ключевые музыкальные элементы, которые делают R&B тем, что он есть.</p>
+
+      <h2 id="s1">Грув и ритмическая основа</h2>
+      <p>Грув — сердце R&B. Это не просто ритм, это ощущение, которое заставляет тело двигаться непроизвольно. Технически грув строится на нескольких принципах:</p>
+      <ul>
+        <li><strong>Backbeat</strong> — акцент на слабые доли (2 и 4 в 4/4). Это базовая черта, отличающая R&B от европейской музыки.</li>
+        <li><strong>Laid-back feel</strong> — некоторые элементы слегка запаздывают за долей, создавая расслабленное «тягучее» ощущение.</li>
+        <li><strong>Polyrhythm</strong> — несколько ритмических слоёв одновременно: хай-хэт, баc-барабан, перкуссия, бас-гитара говорят по-разному, но вместе.</li>
+      </ul>
+      <div class="highlight-box">
+        <strong>Пример</strong>
+        Послушай «I Feel Good» Джеймса Брауна — это эталон грува. Каждый инструмент — как отдельная ритмическая линия, но всё вместе звучит как один организм.
+      </div>
+
+      <h2 id="s2">Вокальные мелизмы</h2>
+      <p>Мелизм — это когда один слог пропевается через несколько нот. Техника пришла из gospel и African American church music. В R&B она стала визитной карточкой.</p>
+      <p>Мелизм может быть коротким — небольшой «завиток» на конце фразы — или развёрнутым, как у Mariah Carey или Whitney Houston, где один слог превращается в мини-соло.</p>
+      <blockquote>Мелизм — это не украшение, это способ вложить максимум эмоции в минимум слов.</blockquote>
+      <p>Современные исполнители — Beyoncé, Alicia Keys, H.E.R. — используют мелизм более сдержанно, но не менее точно.</p>
+
+      <h2 id="s3">Синкопы</h2>
+      <p>Синкопа — акцент на неожиданной, «слабой» части доли. В R&B синкопированный ритм встречается везде: в мелодии, в бас-линии, в хлопках.</p>
+      <p>Именно синкопы создают ощущение «качания», упругости ритма. Слушай бас-гитару в треках Motown — она редко попадает ровно в долю, но никогда не звучит «неправильно».</p>
+
+      <h2 id="s4">Сэмплирование</h2>
+      <p>С 1980-х годов сэмплирование стало важнейшим инструментом R&B-продюсеров. Оно позволяет:</p>
+      <ul>
+        <li>Вплести историческую текстуру в современный трек</li>
+        <li>Создать мгновенное ощущение ностальгии</li>
+        <li>Переосмыслить классический материал в новом контексте</li>
+      </ul>
+      <p>Знаковый пример — «No Scrubs» TLC (1999), где сэмпл используется тонко и органично. Или работы Timbaland, который превращал этнические записи в футуристические биты.</p>
+
+      <h2 id="s5">Гармония и аккорды</h2>
+      <p>R&B тяготеет к расширенным аккордам: септаккорды (7th), нонаккорды (9th), 11-е и 13-е. Эти гармонии добавляют «мечтательность», «теплоту» или «томление» — в зависимости от контекста.</p>
+      <p>Блюзовая гамма (пентатоника + «синяя» нота) — ещё один слой, придающий характерную «горчинку». Именно поэтому R&B-баллады ощущаются одновременно сладкими и меланхоличными.</p>
+      <div class="lp-nav-bottom">
+        <div class="lp-nav-btn">
+          <span>Предыдущая</span>
+          <a href="learn.html?id=history">← Истоки R&B: от блюза к Motown</a>
+        </div>
+        <div class="lp-nav-btn lp-nav-btn--right">
+          <span>Следующая</span>
+          <a href="learn.html?id=neosoul">Neo Soul — бунт против поп-формата →</a>
+        </div>
+      </div>
+    `
+  },
+
+  /* ── 3. Neo Soul ─────────────────────────────────────────── */
+  neosoul: {
+    id:    "neosoul",
+    tag:   "Культура",
+    title: "Neo Soul — бунт против поп-формата",
+    time:  "10 мин чтения",
+    date:  "2025",
+    bg:    "linear-gradient(135deg,#1a0a00,#c2410c,#e91e8c)",
+    toc: [
+      { href: "#s1", text: "Контекст 1990-х" },
+      { href: "#s2", text: "Ключевые артисты" },
+      { href: "#s3", text: "Звук движения" },
+      { href: "#s4", text: "Тексты и идеология" },
+      { href: "#s5", text: "Наследие Neo Soul" },
+    ],
+    html: `
+      <p>В начале 1990-х R&B был на вершине коммерческого успеха — и, по мнению многих, на грани творческой пустоты. Именно тогда возникло движение, которое вернуло душу в музыку. Его назовут Neo Soul.</p>
+
+      <h2 id="s1">Контекст 1990-х</h2>
+      <p>Мейнстримный R&B эпохи New Jack Swing был полирован до блеска: безупречное производство, танцевальные хиты, MTV-friendly образы. Это работало — коммерчески. Но часть слушателей и музыкантов чувствовала, что за блеском потерялась аутентичность.</p>
+      <p>Одновременно хип-хоп переживал золотой век: Notorious B.I.G., Nas, Wu-Tang Clan говорили о реальной жизни с бескомпромиссной честностью. Это давление с двух сторон породило запрос на новое направление в R&B — более сырое, органическое, интеллектуальное.</p>
+
+      <h2 id="s2">Ключевые артисты</h2>
+      <p>Neo Soul не появился из воздуха — его сформировали конкретные артисты и альбомы.</p>
+      <ul>
+        <li><strong>D'Angelo</strong> — альбом «Brown Sugar» (1995) стал манифестом. Живые инструменты, funk-грув, вокал на грани шёпота.</li>
+        <li><strong>Erykah Badu</strong> — «Baduizm» (1997): голос как инструмент, тексты как поэзия, образ как искусство.</li>
+        <li><strong>Lauryn Hill</strong> — «The Miseducation of Lauryn Hill» (1998): до сих пор считается одним из лучших альбомов в истории.</li>
+        <li><strong>Maxwell</strong> — «Urban Hang Suite» (1996): романтика без сентиментальности.</li>
+        <li><strong>Musiq Soulchild, Jill Scott, India.Arie</strong> — продолжили традицию в 2000-х.</li>
+      </ul>
+      <div class="highlight-box">
+        <strong>Альбом, который изменил всё</strong>
+        «Voodoo» D'Angelo (2000) — пять лет работы, записанный почти полностью живьём. Критики называли его «самым сексуальным альбомом в истории R&B». Продюсер Questlove создал грув, где даже биты звучат как дыхание.
+      </div>
+
+      <h2 id="s3">Звук движения</h2>
+      <p>Neo Soul намеренно противопоставлял себя цифровому глянцу мейнстрима:</p>
+      <ul>
+        <li>Живые инструменты вместо синтезаторов — особенно Hammond-орган, Rhodes, живые барабаны</li>
+        <li>Тёплая «аналоговая» запись — намеренные шумы, дыхание, случайные детали</li>
+        <li>Loose, laid-back ритм — как будто музыканты чуть запаздывают, но именно это создаёт напряжение</li>
+        <li>Джазовые гармонии — сложные аккорды, неожиданные модуляции</li>
+      </ul>
+
+      <h2 id="s4">Тексты и идеология</h2>
+      <p>Neo Soul вернул в R&B тематическую серьёзность. Эррика Баду пела о духовности и самопознании. Лорин Хилл — о любви, предательстве и расовой идентичности. D'Angelo исследовал чувственность без вульгарности.</p>
+      <blockquote>«Я не пытаюсь сделать хит. Я пытаюсь сделать что-то, что останется» — Erykah Badu</blockquote>
+      <p>Афроцентризм, феминизм, духовные поиски, политическое сознание — всё это нашло место в текстах Neo Soul, не теряя при этом танцевальности и эмоциональности.</p>
+
+      <h2 id="s5">Наследие Neo Soul</h2>
+      <p>Neo Soul напрямую повлиял на следующее поколение: Amy Winehouse, Frank Ocean, H.E.R., SZA — все они признают долг перед движением. Его влияние ощущается в современном Alt R&B и даже в поп-музыке.</p>
+      <p>Главное наследие Neo Soul — доказательство того, что коммерческий успех и художественная целостность совместимы. «The Miseducation of Lauryn Hill» продался тиражом более 19 миллионов копий. Без компромиссов.</p>
+      <div class="lp-nav-bottom">
+        <div class="lp-nav-btn">
+          <span>Предыдущая</span>
+          <a href="learn.html?id=theory">← Что делает трек R&B-звучащим?</a>
+        </div>
+        <div class="lp-nav-btn lp-nav-btn--right">
+          <span>Следующая</span>
+          <a href="learn.html?id=altrnb">Alt R&B: жанр без границ →</a>
+        </div>
+      </div>
+    `
+  },
+
+  /* ── 4. Alt R&B ──────────────────────────────────────────── */
+  altrnb: {
+    id:    "altrnb",
+    tag:   "Современность",
+    title: "Alt R&B: жанр без границ",
+    time:  "9 мин чтения",
+    date:  "2025",
+    bg:    "linear-gradient(135deg,#001a0f,#065f46,#7c3aed)",
+    toc: [
+      { href: "#s1", text: "Что такое Alt R&B?" },
+      { href: "#s2", text: "Frank Ocean — переломный момент" },
+      { href: "#s3", text: "SZA и женский взгляд" },
+      { href: "#s4", text: "Blood Orange и арт-подход" },
+      { href: "#s5", text: "Почему это важно?" },
+    ],
+    html: `
+      <p>Альтернативный R&B — это не поджанр с чёткими правилами. Это скорее позиция: делать R&B-музыку, не беспокоясь о том, что такое R&B. Результат — одни из самых интересных записей XXI века.</p>
+
+      <h2 id="s1">Что такое Alt R&B?</h2>
+      <p>Термин «альтернативный R&B» появился в музыкальной прессе в начале 2010-х. Он описывает артистов, которые используют эмоциональный и вокальный язык R&B, но сочетают его с:</p>
+      <ul>
+        <li>Электронной музыкой и экспериментальным продакшном</li>
+        <li>Инди-роком и постпанком</li>
+        <li>Джазом и авангардом</li>
+        <li>Хип-хопом и эмбиентом</li>
+      </ul>
+      <p>Звук Alt R&B часто более холодный, более интроспективный, чем мейнстримный R&B. Темпы медленнее. Структуры нелинейны. Тексты нередко намеренно двусмысленны.</p>
+
+      <h2 id="s2">Frank Ocean — переломный момент</h2>
+      <p>Альбом «Channel Orange» (2012) изменил представление о том, что может быть R&B. Frank Ocean писал о нереализованной любви, ностальгии, классовых противоречиях — с кинематографической детальностью.</p>
+      <div class="highlight-box">
+        <strong>«Blonde» (2016)</strong>
+        Если «Channel Orange» открыл дверь, то «Blonde» снёс стены. 45 минут постоянно меняющихся текстур, ни одного традиционного хита, только поток сознания — и один из самых обсуждаемых альбомов десятилетия.
+      </div>
+      <p>Frank Ocean также открыто заявил о своей бисексуальности в письме, опубликованном перед выходом «Channel Orange» — смелый шаг для артиста R&B-аудитории. Это стало частью разговора о том, кому «принадлежит» жанр.</p>
+
+      <h2 id="s3">SZA и женский взгляд</h2>
+      <p>SZA (Solána Imani Rowe) принесла в Alt R&B женскую уязвимость без ретуши. Её дебютный альбом «Ctrl» (2017) — хроника неуверенности в себе, сложных отношений, поиска идентичности.</p>
+      <blockquote>«Я хотела, чтобы молодые девушки услышали: то, что ты чувствуешь — нормально. Не нужно это прятать» — SZA</blockquote>
+      <p>Продюсирование Ctrl смешало акустические инструменты с трэп-битами и синтезаторами, создав звук одновременно интимный и современный. «Good Days», «Kill Bill», «Shirt» — каждый сингл становился культурным событием.</p>
+
+      <h2 id="s4">Blood Orange и арт-подход</h2>
+      <p>Dev Hynes (Blood Orange) — пожалуй, самый экспериментальный голос в Alt R&B. Его проекты существуют на пересечении R&B, диско, постпанка и концептуального искусства.</p>
+      <p>Альбомы «Cupid Deluxe» (2013) и «Negro Swan» (2018) исследуют квир-идентичность, расовую травму и диаспорный опыт через призму танцевальной музыки. Blood Orange сотрудничал с Solange, Carly Rae Jepsen, Sky Ferreira — показывая, что «Alternative R&B» не знает жанровых границ.</p>
+
+      <h2 id="s5">Почему это важно?</h2>
+      <p>Alt R&B расширил словарь музыки о чёрном опыте, включив в него голоса, которые раньше не вписывались в формат: квир-артисты, интроверты, аутсайдеры, философы.</p>
+      <p>Он доказал, что R&B — не формула, а точка зрения. И что эта точка зрения может выражаться самыми разными средствами, оставаясь при этом глубоко узнаваемой.</p>
+      <div class="lp-nav-bottom">
+        <div class="lp-nav-btn">
+          <span>Предыдущая</span>
+          <a href="learn.html?id=neosoul">← Neo Soul — бунт против поп-формата</a>
+        </div>
+        <div class="lp-nav-btn lp-nav-btn--right">
+          <span>Следующая</span>
+          <a href="learn.html?id=glossary">Ключевые термины R&B →</a>
+        </div>
+      </div>
+    `
+  },
+
+  /* ── 5. Глоссарий ────────────────────────────────────────── */
+  glossary: {
+    id:    "glossary",
+    tag:   "Глоссарий",
+    title: "Ключевые термины и понятия R&B",
+    time:  "6 мин чтения",
+    date:  "2025",
+    bg:    "linear-gradient(135deg,#1a0000,#991b1b,#e91e8c)",
+    toc: [
+      { href: "#s1", text: "Вокальные термины" },
+      { href: "#s2", text: "Ритм и грув" },
+      { href: "#s3", text: "Структура трека" },
+      { href: "#s4", text: "Продакшн и звук" },
+    ],
+    html: `
+      <p>R&B имеет собственный язык — специфические термины, которые используют музыканты, критики и фанаты. Этот справочник поможет тебе ориентироваться в разговоре о жанре.</p>
+
+      <h2 id="s1">Вокальные термины</h2>
+      <table class="lp-glossary">
+        <thead>
+          <tr><th>Термин</th><th>Определение</th><th>Пример</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="term">Мелизм</td><td>Пропевание нескольких нот на один слог. Создаёт эмоциональную насыщенность.</td><td>Whitney Houston — «I Will Always Love You»</td></tr>
+          <tr><td class="term">Run</td><td>Быстрая вокальная пробежка по нотам вверх или вниз — разновидность мелизма.</td><td>Mariah Carey, Beyoncé</td></tr>
+          <tr><td class="term">Ad-lib</td><td>Импровизированные вставки поверх основного вокала: восклицания, повторы, неожиданные фразы.</td><td>«Yeah», «C'mon» у James Brown</td></tr>
+          <tr><td class="term">Falsetto</td><td>Пение в регистре выше натурального голоса. Создаёт ощущение уязвимости или нежности.</td><td>The Weeknd, Prince</td></tr>
+          <tr><td class="term">Vibrato</td><td>Быстрое колебание высоты звука. Добавляет теплоту и глубину.</td><td>Ariana Grande, Erykah Badu</td></tr>
+          <tr><td class="term">Belting</td><td>Мощное пение в высоком регистре полным голосом.</td><td>Aretha Franklin, Beyoncé</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s2">Ритм и грув</h2>
+      <table class="lp-glossary">
+        <thead>
+          <tr><th>Термин</th><th>Определение</th><th>Пример</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="term">Backbeat</td><td>Акцент на слабых долях (2 и 4). Базовый ритмический принцип R&B.</td><td>Почти любой R&B-трек</td></tr>
+          <tr><td class="term">Грув</td><td>Неформальный термин для ощущения ритмической упругости, которое «заставляет двигаться».</td><td>James Brown — «Sex Machine»</td></tr>
+          <tr><td class="term">Синкопа</td><td>Акцент на слабой части доли. Создаёт ритмическую непредсказуемость.</td><td>Большинство R&B-бас-линий</td></tr>
+          <tr><td class="term">Laid-back</td><td>Ритмическое «запаздывание» — некоторые элементы чуть позже доли.</td><td>D'Angelo «Voodoo»</td></tr>
+          <tr><td class="term">Pocket</td><td>Говорят, что музыкант «играет в pocket», когда его ритм идеально совпадает с грувом.</td><td>Questlove (The Roots)</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s3">Структура трека</h2>
+      <table class="lp-glossary">
+        <thead>
+          <tr><th>Термин</th><th>Определение</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="term">Bridge</td><td>Раздел трека, который контрастирует с куплетом и припевом — обычно один раз, перед финальным припевом. Создаёт эмоциональный перелом.</td></tr>
+          <tr><td class="term">Breakdown</td><td>Момент в треке, где большинство инструментов «выпадает», оставляя минимальную текстуру. Усиливает следующий раздел.</td></tr>
+          <tr><td class="term">Hook</td><td>Запоминающаяся музыкальная или вокальная фраза — обычно припев или его часть.</td></tr>
+          <tr><td class="term">Outro</td><td>Завершающий раздел трека. В R&B часто содержит fade-out с ad-lib-импровизацией.</td></tr>
+          <tr><td class="term">Interlude</td><td>Короткий переходный трек на альбоме — речь, инструментал, атмосфера.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s4">Продакшн и звук</h2>
+      <table class="lp-glossary">
+        <thead>
+          <tr><th>Термин</th><th>Определение</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="term">Сэмпл</td><td>Фрагмент существующей записи, использованный в новом треке. Часто основа хип-хоп и R&B-биты.</td></tr>
+          <tr><td class="term">Трэп-хай-хэт</td><td>Быстрые, «дробящиеся» хай-хэты, характерные для трэп-влияния в современном R&B.</td></tr>
+          <tr><td class="term">808</td><td>Бас-барабан из Roland TR-808 — основа современного R&B и хип-хоп баса.</td></tr>
+          <tr><td class="term">Автотюн</td><td>Обработка вокала для коррекции или художественного эффекта. В R&B часто используется как выразительный инструмент.</td></tr>
+          <tr><td class="term">Wet / Dry</td><td>Количество реверба/дилея в звуке. «Wet» — много эффектов, «dry» — чистый сухой звук.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="lp-nav-bottom">
+        <div class="lp-nav-btn">
+          <span>Предыдущая</span>
+          <a href="learn.html?id=altrnb">← Alt R&B: жанр без границ</a>
+        </div>
+        <div class="lp-nav-btn lp-nav-btn--right">
+          <span>Начало</span>
+          <a href="learn.html?id=history">Истоки R&B →</a>
+        </div>
+      </div>
+    `
+  }
+};
+
+/* ── Порядок для «Другие статьи» и списка ── */
+
+/* ══ ПЕРЕВОДЫ СТАТЕЙ ══ */
+const ARTICLES_I18N = {
+  history: {
+    en:{ tag:"History", title:"R&B Origins: From Blues to Motown", time:"12 min read",
+      toc:[{href:"#s1",text:"Roots in African-American Music"},{href:"#s2",text:"What is Rhythm & Blues?"},{href:"#s3",text:"The Motown Era"},{href:"#s4",text:"Spread and Influence"},{href:"#s5",text:"Legacy"}],
+      html:`<p>Rhythm &amp; Blues is one of the most influential music genres in the world. To understand its essence, we must return to the early 20th century, when African-American communities in the American South were forming a unique musical language.</p><h2 id="s1">Roots in African-American Music</h2><p>R&B grew from several deeply intertwined traditions: <strong>Blues</strong> — music born from sorrow and hope with characteristic bent notes; <strong>Jazz</strong> — improvisation, complex harmonies and swing rhythm; <strong>Gospel</strong> — spiritual singing and powerful vocal expression; <strong>Work songs</strong> — labor songs that laid the foundation of rhythmic patterns.</p><p>The Great Migration of 1910–1970 carried these traditions from the rural South to industrial Northern cities — Chicago, Detroit, New York. There, in tight clubs and small labels, a new genre took shape.</p><h2 id="s2">What is Rhythm &amp; Blues?</h2><p>The term "Rhythm &amp; Blues" was introduced by Billboard magazine in 1949 to describe music popular with African-American audiences, replacing earlier derogatory category names. The new name reflected the genre's key features.</p><div class="highlight-box"><strong>Characteristic Elements of R&B</strong> Strong emphasis on beats 2 and 4 (backbeat), syncopated rhythm, expressive vocals with melismas, use of horns and electric guitar. Lyrics covered themes of love, loss, joy and social protest.</div><p>In the 1950s, R&B had an enormous influence on the birth of rock and roll. Many early rock hits by white performers were covers of African-American R&B artists' compositions.</p><h2 id="s3">The Motown Era</h2><p>In 1959, Berry Gordy founded Motown Records in Detroit — a revolution: for the first time R&B music was systematically packaged, polished and promoted to a broad audience including white listeners.</p><blockquote>"We were making music for all people" — Berry Gordy</blockquote><p>Motown gave the world Stevie Wonder, Marvin Gaye, The Supremes, The Temptations, The Four Tops. The label's sound — clean production, memorable melodies, complex choral arrangements — became the standard for soul.</p><h2 id="s4">Spread and Influence</h2><p>By the late 1960s, R&B had evolved in several directions. The Soul movement led by James Brown and Aretha Franklin added political sharpness. Funk shifted focus to groove and danceability. Philadelphia Soul created a luxurious orchestral sound.</p><p>In the 1970s–80s, disco and electronic R&B emerged, while New Jack Swing combined hip-hop beats with soul vocals. Each decade brought new transformations while preserving the genre's emotional core.</p><h2 id="s5">Legacy</h2><p>Today R&B is a living, global genre. Its DNA can be traced in pop, hip-hop, electronic music and beyond. Beyoncé, Frank Ocean, SZA, The Weeknd — all stand on the shoulders of those who sang the blues in Chicago clubs 75 years ago.</p><div class="lp-nav-bottom"><div class="lp-nav-btn lp-nav-btn--right"><span>Next article</span><a href="learn.html?id=theory">What Makes a Track Sound Like R&B? →</a></div></div>`
+    },
+    tr:{ tag:"Tarih", title:"R&B'nin Kökenleri: Bluz'dan Motown'a", time:"12 dk okuma",
+      toc:[{href:"#s1",text:"Afro-Amerikan Müziğindeki Kökler"},{href:"#s2",text:"Rhythm & Blues Nedir?"},{href:"#s3",text:"Motown Dönemi"},{href:"#s4",text:"Yayılma ve Etki"},{href:"#s5",text:"Miras"}],
+      html:`<p>Rhythm &amp; Blues, dünyanın en etkili müzik türlerinden biridir. Özünü anlamak için 20. yüzyılın başına, Afro-Amerikan toplulukların Güney ABD'de benzersiz bir müzik dili oluşturduğu döneme dönmemiz gerekiyor.</p><h2 id="s1">Afro-Amerikan Müziğindeki Kökler</h2><p>R&B birbirine derinden bağlı geleneklerden doğdu: <strong>Bluz</strong> — keder ve umuttan doğan müzik; <strong>Caz</strong> — doğaçlama ve swing ritmi; <strong>Gospel</strong> — ruhani şarkılar ve güçlü vokal ifadesi; <strong>İş şarkıları</strong> — ritmik kalıpların temelini atan emek şarkıları.</p><p>1910–1970'lerin Büyük Göçü bu gelenekleri kırsal Güneyden kuzey sanayi kentlerine — Chicago, Detroit, New York'a — taşıdı.</p><h2 id="s2">Rhythm &amp; Blues Nedir?</h2><p>Terim, Billboard dergisi tarafından 1949'da Afro-Amerikalı dinleyiciler arasında popüler olan müziği tanımlamak için kullanıldı.</p><div class="highlight-box"><strong>R&B'nin Temel Özellikleri</strong> 2. ve 4. vurgu (backbeat), senkoplu ritim, melizmalı etkileyici vokal, nefesli çalgılar ve elektro gitar kullanımı.</div><p>1950'lerde R&B, rock and roll'un doğuşunu derinden etkiledi.</p><h2 id="s3">Motown Dönemi</h2><p>1959'da Berry Gordy, Detroit'te Motown Records'u kurdu — bir devrim: R&B müziği ilk kez sistematik olarak paketlenerek geniş bir kitleye tanıtıldı.</p><blockquote>"Herkese müzik yapıyorduk" — Berry Gordy</blockquote><p>Motown, dünyaya Stevie Wonder, Marvin Gaye, The Supremes, The Temptations'ı kazandırdı.</p><h2 id="s4">Yayılma ve Etki</h2><p>1960'ların sonunda R&B birkaç yönde evrildi. Soul hareketi siyasi keskinlik kattı. Funk groove ve dans edilebilirliğe odaklandı.</p><h2 id="s5">Miras</h2><p>Bugün R&B canlı, küresel bir tür. Beyoncé, Frank Ocean, SZA, The Weeknd — hepsi 75 yıl önce Chicago kulüplerinde bluz söyleyenlerin omuzlarında duruyor.</p><div class="lp-nav-bottom"><div class="lp-nav-btn lp-nav-btn--right"><span>Sonraki</span><a href="learn.html?id=theory">Bir Parçayı R&B Yapan Nedir? →</a></div></div>`
+    },
+    kz:{ tag:"Тарих", title:"R&B бастауы: блюзден Motown-ға дейін", time:"12 мин оқу",
+      toc:[{href:"#s1",text:"Афроамерикандық музыкадағы тамырлар"},{href:"#s2",text:"Rhythm & Blues дегеніміз не?"},{href:"#s3",text:"Motown дәуірі"},{href:"#s4",text:"Таралу және ықпал"},{href:"#s5",text:"Мұра"}],
+      html:`<p>Rhythm &amp; Blues — әлемдегі ең ықпалды музыкалық жанрлардың бірі. Оның мәнін түсіну үшін XX ғасырдың басына оралу керек, сол кезде Оңтүстік АҚШ-тағы афроамерикандық қауымдастықтар өзіндік музыкалық тіл қалыптастырды.</p><h2 id="s1">Афроамерикандық музыкадағы тамырлар</h2><p>R&B бірнеше тығыз байланысқан дәстүрден өсті: <strong>Блюз</strong> — қайғы мен үміттен туған музыка; <strong>Джаз</strong> — импровизация және свинг ырғағы; <strong>Gospel</strong> — рухани әндер; <strong>Еңбек әндері</strong> — ырғақтық үлгілердің негізін қалаған әндер.</p><p>1910–1970-жылдардағы Ұлы Миграция бұл дәстүрлерді ауылдық Оңтүстіктен солтүстік өнеркәсіп қалаларына алып келді.</p><h2 id="s2">Rhythm &amp; Blues дегеніміз не?</h2><p>«Rhythm &amp; Blues» термині Billboard журналы тарапынан 1949 жылы афроамерикандық аудитория арасында танымал музыканы сипаттау үшін енгізілді.</p><div class="highlight-box"><strong>R&B-нің сипатты элементтері</strong> Backbeat, синкопалық ырғақ, мелизмалы экспрессивті вокал.</div><h2 id="s3">Motown дәуірі</h2><p>1959 жылы Берри Горди Детройтта Motown Records лейблін ашты — революция: R&B музыкасы алғаш рет кең аудиторияға жүйелі түрде жылжытылды.</p><blockquote>«Біз барлық адамдарға музыка жасадық» — Берри Горди</blockquote><h2 id="s4">Таралу және ықпал</h2><p>1960-жылдардың соңында R&B бірнеше бағытта дамыды. Soul қозғалысы саяси өткірлік қосты. Funk грувқа бағытталды.</p><h2 id="s5">Мұра</h2><p>Бүгін R&B — тірі, жаһандық жанр. Beyoncé, Frank Ocean, SZA, The Weeknd — бәрі 75 жыл бұрын Чикаго клубтарында блюз айтқандардың иықтарына тұрады.</p><div class="lp-nav-bottom"><div class="lp-nav-btn lp-nav-btn--right"><span>Келесі</span><a href="learn.html?id=theory">Тректі R&B-ге не жатқызады? →</a></div></div>`
+    }
+  },
+  theory: {
+    en:{ tag:"Theory", title:"What Makes a Track Sound Like R&B?", time:"8 min read",
+      toc:[{href:"#s1",text:"Groove and Rhythmic Foundation"},{href:"#s2",text:"Vocal Melismas"},{href:"#s3",text:"Syncopation"},{href:"#s4",text:"Sampling"},{href:"#s5",text:"Harmony and Chords"}],
+      html:`<p>When you hear an R&B track, you recognize it instantly. But what exactly creates that feeling? Let's break down the key musical elements that make R&B what it is.</p><h2 id="s1">Groove and Rhythmic Foundation</h2><p>Groove is the heart of R&B — a feeling that makes your body move involuntarily. Technically, groove is built on several principles:</p><ul><li><strong>Backbeat</strong> — accent on weak beats (2 and 4 in 4/4). The basic feature distinguishing R&B from European music.</li><li><strong>Laid-back feel</strong> — some elements slightly lag behind the beat, creating a relaxed "dragging" sensation.</li><li><strong>Polyrhythm</strong> — multiple rhythmic layers simultaneously: hi-hat, bass drum, percussion, bass guitar all speaking differently, but together.</li></ul><div class="highlight-box"><strong>Example</strong> Listen to "I Feel Good" by James Brown — the gold standard of groove. Each instrument is like a separate rhythmic line, but together they sound like one organism.</div><h2 id="s2">Vocal Melismas</h2><p>Melisma is when one syllable is sung across multiple notes. The technique came from gospel and African-American church music. In R&B it became a signature style.</p><p>Melisma can be short — a small "curl" at the end of a phrase — or extended, like with Mariah Carey or Whitney Houston, where one syllable becomes a mini-solo.</p><blockquote>Melisma isn't decoration — it's a way to pack maximum emotion into minimum words.</blockquote><h2 id="s3">Syncopation</h2><p>Syncopation — accent on an unexpected "weak" part of the beat. In R&B, syncopated rhythm is everywhere: in the melody, bass line, claps. It creates the feeling of swing and rhythmic elasticity.</p><h2 id="s4">Sampling</h2><p>Since the 1980s, sampling has become a key tool for R&B producers. It allows: weaving historical texture into a modern track; creating an instant sense of nostalgia; reinterpreting classic material in a new context.</p><h2 id="s5">Harmony and Chords</h2><p>R&B favors extended chords: sevenths (7th), ninths (9th), 11ths and 13ths. These harmonies add "dreaminess", "warmth" or "longing" — depending on context. The blues scale (pentatonic + "blue" note) adds characteristic "bitterness", which is why R&B ballads feel simultaneously sweet and melancholic.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Previous</span><a href="learn.html?id=history">← R&B Origins</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Next</span><a href="learn.html?id=neosoul">Neo Soul →</a></div></div>`
+    },
+    tr:{ tag:"Teori", title:"Bir Parçayı R&B Yapan Nedir?", time:"8 dk okuma",
+      toc:[{href:"#s1",text:"Groove ve Ritmik Temel"},{href:"#s2",text:"Vokal Melizmalar"},{href:"#s3",text:"Senkoplar"},{href:"#s4",text:"Örnekleme"},{href:"#s5",text:"Armoni ve Akorlar"}],
+      html:`<p>Bir R&B parçası duyduğunda anında tanırsın. Peki bu hissi tam olarak ne yaratıyor? R&B'yi R&B yapan temel müzikal unsurları inceleyelim.</p><h2 id="s1">Groove ve Ritmik Temel</h2><p>Groove R&B'nin kalbidir — bedeninizi istemsizce hareket ettiren bir his. Temel ilkeler:</p><ul><li><strong>Backbeat</strong> — zayıf vuruşlara (2 ve 4) vurgu.</li><li><strong>Laid-back his</strong> — bazı unsurlar vuruşun biraz gerisinde kalır.</li><li><strong>Poliritim</strong> — eş zamanlı birden fazla ritmik katman.</li></ul><h2 id="s2">Vokal Melizmalar</h2><p>Melizma, bir heceyi birden fazla nota üzerinden söylemektir — gospel'den gelen bu teknik R&B'nin imzası oldu.</p><blockquote>Melizma süsleme değil — minimum kelimeyle maksimum duygu aktarma yöntemi.</blockquote><h2 id="s3">Senkoplar</h2><p>Senkop — vuruşun zayıf kısmına vurgu. R&B'de her yerde karşımıza çıkar ve sallanma hissi yaratır.</p><h2 id="s4">Örnekleme</h2><p>1980'lerden itibaren örnekleme R&B prodüktörlerinin temel aracı haline geldi — tarihi dokuyu modern parçalara dokumaya izin veriyor.</p><h2 id="s5">Armoni ve Akorlar</h2><p>R&B genişletilmiş akortlara yönelir: yedili, dokuzlu, 11. ve 13. dereceler. Bağlama göre "rüya gibi", "sıcak" veya "özlem dolu" bir his katar.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Önceki</span><a href="learn.html?id=history">← R&B Kökenleri</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Sonraki</span><a href="learn.html?id=neosoul">Neo Soul →</a></div></div>`
+    },
+    kz:{ tag:"Теория", title:"Тректі R&B-ге не жатқызады?", time:"8 мин оқу",
+      toc:[{href:"#s1",text:"Грув және ырғақтық негіз"},{href:"#s2",text:"Вокалдық мелизмалар"},{href:"#s3",text:"Синкопалар"},{href:"#s4",text:"Сэмплинг"},{href:"#s5",text:"Гармония және аккордтар"}],
+      html:`<p>R&B тректі естігенде бірден таниссың. Бірақ бұл сезімді нақты не жасайды? R&B-ні R&B ететін негізгі музыкалық элементтерді талдайық.</p><h2 id="s1">Грув және ырғақтық негіз</h2><p>Грув — R&B-нің жүрегі, денені еріксіз қозғалтатын сезім. Негізгі принциптер:</p><ul><li><strong>Backbeat</strong> — әлсіз үлестерге (2 және 4) екпін.</li><li><strong>Laid-back сезімі</strong> — кейбір элементтер үлестен сәл кешігеді.</li><li><strong>Полиритм</strong> — бір мезгілде бірнеше ырғақтық қабат.</li></ul><h2 id="s2">Вокалдық мелизмалар</h2><p>Мелизма — бір буынды бірнеше нота арқылы айту. Gospel-ден келген бұл техника R&B-нің белгісі болды.</p><blockquote>Мелизма — бұл безендіру емес, минималды сөздерге максималды эмоцияны салу тәсілі.</blockquote><h2 id="s3">Синкопалар</h2><p>Синкопа — үлестің күтпеген «әлсіз» бөлігіне екпін беру. R&B-де барлық жерде кездеседі.</p><h2 id="s4">Сэмплинг</h2><p>1980-жылдардан бастап сэмплинг R&B продюсерлерінің маңызды құралына айналды.</p><h2 id="s5">Гармония және аккордтар</h2><p>R&B кеңейтілген аккордтарға бейім: септаккордтар, нонаккордтар, 11-ші және 13-ші. Контекстке байланысты «арман», «жылулық» немесе «сағыныш» қосады.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Алдыңғы</span><a href="learn.html?id=history">← R&B бастауы</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Келесі</span><a href="learn.html?id=neosoul">Neo Soul →</a></div></div>`
+    }
+  },
+  neosoul: {
+    en:{ tag:"Culture", title:"Neo Soul — A Rebellion Against Pop", time:"10 min read",
+      toc:[{href:"#s1",text:"The 1990s Context"},{href:"#s2",text:"Key Artists"},{href:"#s3",text:"The Sound of the Movement"},{href:"#s4",text:"Lyrics and Ideology"},{href:"#s5",text:"Neo Soul's Legacy"}],
+      html:`<p>In the early 1990s, R&B was at the peak of commercial success — and, in many opinions, on the edge of creative emptiness. That's when a movement emerged that brought soul back to the music. It would be called Neo Soul.</p><h2 id="s1">The 1990s Context</h2><p>Mainstream R&B of the New Jack Swing era was polished to a shine: flawless production, dance hits, MTV-friendly images. It worked commercially. But some listeners and musicians felt that authenticity had been lost behind the gloss.</p><p>At the same time, hip-hop was in a golden age: Notorious B.I.G., Nas, Wu-Tang Clan spoke about real life with uncompromising honesty. This pressure from both sides created a demand for a new direction in R&B — more raw, organic, intellectual.</p><h2 id="s2">Key Artists</h2><p>Neo Soul didn't come from thin air — it was shaped by specific artists and albums.</p><ul><li><strong>D'Angelo</strong> — "Brown Sugar" (1995) was a manifesto. Live instruments, funk groove, vocal on the edge of a whisper.</li><li><strong>Erykah Badu</strong> — "Baduizm" (1997): voice as instrument, lyrics as poetry, image as art.</li><li><strong>Lauryn Hill</strong> — "The Miseducation of Lauryn Hill" (1998): still considered one of the best albums in history.</li><li><strong>Maxwell</strong> — "Urban Hang Suite" (1996): romance without sentimentality.</li></ul><div class="highlight-box"><strong>The Album That Changed Everything</strong> D'Angelo's "Voodoo" (2000) — five years in the making, recorded almost entirely live. Critics called it "the most sensual album in R&B history." Producer Questlove created a groove where even the beats sound like breathing.</div><h2 id="s3">The Sound of the Movement</h2><ul><li>Live instruments instead of synthesizers — especially Hammond organ, Rhodes, live drums</li><li>Warm "analog" recording — intentional noise, breathing, accidental details</li><li>Loose, laid-back rhythm — as if musicians are slightly late, but that creates tension</li><li>Jazz harmonies — complex chords, unexpected modulations</li></ul><h2 id="s4">Lyrics and Ideology</h2><p>Neo Soul returned thematic seriousness to R&B. Erykah Badu sang about spirituality and self-knowledge. Lauryn Hill — about love, betrayal and racial identity. D'Angelo explored sensuality without vulgarity.</p><blockquote>"I'm not trying to make a hit. I'm trying to make something that will last." — Erykah Badu</blockquote><p>Afrocentrism, feminism, spiritual seeking, political consciousness — all found a place in Neo Soul lyrics without losing danceability and emotional depth.</p><h2 id="s5">Neo Soul's Legacy</h2><p>Neo Soul directly influenced the next generation: Amy Winehouse, Frank Ocean, H.E.R., SZA — all acknowledge their debt to the movement. Its influence is felt in modern Alt R&B and even pop.</p><p>Neo Soul's main legacy — proving that commercial success and artistic integrity are compatible. "The Miseducation of Lauryn Hill" sold more than 19 million copies. Without compromise.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Previous</span><a href="learn.html?id=theory">← What Makes R&B?</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Next</span><a href="learn.html?id=altrnb">Alt R&B →</a></div></div>`
+    },
+    tr:{ tag:"Kültür", title:"Neo Soul — Pop'a Karşı Başkaldırı", time:"10 dk okuma",
+      toc:[{href:"#s1",text:"1990'ların Bağlamı"},{href:"#s2",text:"Önemli Sanatçılar"},{href:"#s3",text:"Hareketin Sesi"},{href:"#s4",text:"Sözler ve İdeoloji"},{href:"#s5",text:"Miras"}],
+      html:`<p>1990'ların başında R&B ticari başarının zirvesindeydi ve yaratıcı boşluğun eşiğindeydi. İşte o zaman müziğe ruhu geri getiren bir hareket doğdu: Neo Soul.</p><h2 id="s1">1990'ların Bağlamı</h2><p>New Jack Swing döneminin ana akım R&B'si kusursuz prodüksiyon ve dans hitleriyle parlatılmıştı. Ticari olarak işe yarıyordu, ama özgünlük kaybolmuştu. Aynı zamanda hip-hop altın çağını yaşıyordu: Notorious B.I.G., Nas, Wu-Tang Clan gerçek hayattan taviz vermeden söz ediyordu.</p><h2 id="s2">Önemli Sanatçılar</h2><ul><li><strong>D'Angelo</strong> — "Brown Sugar" (1995): canlı enstrümanlar, funk groove, fısıltıya yakın vokal.</li><li><strong>Erykah Badu</strong> — "Baduizm" (1997): enstrüman olarak ses, şiir olarak sözler.</li><li><strong>Lauryn Hill</strong> — "The Miseducation" (1998): tarihin en büyük albümlerinden biri.</li><li><strong>Maxwell</strong> — "Urban Hang Suite" (1996): duygusallık olmadan romantizm.</li></ul><div class="highlight-box"><strong>Her Şeyi Değiştiren Albüm</strong> D'Angelo'nun "Voodoo"su (2000) — beş yıllık çalışma, neredeyse tamamen canlı kaydedildi. Eleştirmenler bunu "R&B tarihinin en duyusal albümü" olarak nitelendirdi.</div><h2 id="s3">Hareketin Sesi</h2><ul><li>Sentezleyiciler yerine canlı enstrümanlar — Hammond org, Rhodes, canlı davullar</li><li>Sıcak analog kayıt</li><li>Caz armonileri — karmaşık akorlar, beklenmedik modülasyonlar</li></ul><h2 id="s4">Sözler ve İdeoloji</h2><blockquote>"Hit yapmaya çalışmıyorum. Kalıcı bir şey yapmaya çalışıyorum." — Erykah Badu</blockquote><p>Afrosentrizm, feminizm, spiritüel arayış, siyasi bilinç — hepsi Neo Soul sözlerinde yer buldu.</p><h2 id="s5">Miras</h2><p>Neo Soul bir sonraki nesli doğrudan etkiledi: Amy Winehouse, Frank Ocean, H.E.R., SZA harekete olan borçlarını kabul ediyor.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Önceki</span><a href="learn.html?id=theory">← Teori</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Sonraki</span><a href="learn.html?id=altrnb">Alt R&B →</a></div></div>`
+    },
+    kz:{ tag:"Мәдениет", title:"Neo Soul — поп-форматқа қарсы бүлік", time:"10 мин оқу",
+      toc:[{href:"#s1",text:"1990-жылдардың контексі"},{href:"#s2",text:"Негізгі орындаушылар"},{href:"#s3",text:"Қозғалыстың дыбысы"},{href:"#s4",text:"Сөздер мен идеология"},{href:"#s5",text:"Мұра"}],
+      html:`<p>1990-жылдардың басында R&B коммерциялық табыстың шыңында болды. Дәл сол кезде музыкаға жанды қайтарған қозғалыс туды. Оны Neo Soul деп атайды.</p><h2 id="s1">1990-жылдардың контексі</h2><p>New Jack Swing дәуірінің бас ағымдағы R&B-і мінсіз продукциямен жылтыраған болды. Ол коммерциялық жұмыс істеді, бірақ шынайылық жоғалды. Бір мезгілде хип-хоп алтын ғасырын кешіп жатты.</p><h2 id="s2">Негізгі орындаушылар</h2><ul><li><strong>D'Angelo</strong> — «Brown Sugar» (1995): тірі аспаптар, funk-грув, сыбырдың шетіндегі вокал.</li><li><strong>Erykah Badu</strong> — «Baduizm» (1997): аспап ретіндегі дауыс, поэзия ретіндегі сөздер.</li><li><strong>Lauryn Hill</strong> — «The Miseducation» (1998): тарихтағы ең керемет альбомдардың бірі.</li><li><strong>Maxwell</strong> — «Urban Hang Suite» (1996): сентименталдылықсыз романтика.</li></ul><div class="highlight-box"><strong>Бәрін өзгерткен альбом</strong> D'Angelo-нің «Voodoo»-сы (2000) — бес жыл жұмыс, дерлік толығымен тікелей жазылды.</div><h2 id="s3">Қозғалыстың дыбысы</h2><ul><li>Синтезаторлардың орнына тірі аспаптар — Hammond-орган, Rhodes, тірі барабандар</li><li>Жылы аналогтық жазба</li><li>Джазды гармониялар</li></ul><h2 id="s4">Сөздер мен идеология</h2><blockquote>«Мен хит жасауға тырыспаймын. Мен қалатын нәрсе жасауға тырысамын» — Erykah Badu</blockquote><h2 id="s5">Мұра</h2><p>Neo Soul келесі ұрпаққа тікелей әсер етті: Amy Winehouse, Frank Ocean, H.E.R., SZA — бәрі қозғалысқа деген қарызын мойындайды.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Алдыңғы</span><a href="learn.html?id=theory">← Теория</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Келесі</span><a href="learn.html?id=altrnb">Alt R&B →</a></div></div>`
+    }
+  },
+  altrnb: {
+    en:{ tag:"Modern", title:"Alt R&B: A Genre Without Borders", time:"9 min read",
+      toc:[{href:"#s1",text:"What is Alt R&B?"},{href:"#s2",text:"Frank Ocean — The Turning Point"},{href:"#s3",text:"SZA and the Female Perspective"},{href:"#s4",text:"Blood Orange and the Art Approach"},{href:"#s5",text:"Why Does It Matter?"}],
+      html:`<p>Alternative R&B isn't a subgenre with strict rules. It's more of a stance: making R&B music without worrying about what R&B is. The result — some of the most interesting recordings of the 21st century.</p><h2 id="s1">What is Alt R&B?</h2><p>The term "alternative R&B" appeared in music press in the early 2010s. It describes artists who use the emotional and vocal language of R&B, but combine it with: electronic music and experimental production; indie rock and post-punk; jazz and avant-garde; hip-hop and ambient.</p><p>Alt R&B's sound is often colder, more introspective than mainstream R&B. Tempos slower. Structures nonlinear. Lyrics often deliberately ambiguous.</p><h2 id="s2">Frank Ocean — The Turning Point</h2><p>"Channel Orange" (2012) changed what R&B could be. Frank Ocean wrote about unrequited love, nostalgia, class contradictions — with cinematic detail.</p><div class="highlight-box"><strong>"Blonde" (2016)</strong> If "Channel Orange" opened a door, "Blonde" knocked down the walls. 45 minutes of constantly shifting textures, not a single traditional hit — one of the most discussed albums of the decade.</div><h2 id="s3">SZA and the Female Perspective</h2><p>SZA brought to Alt R&B a female vulnerability without retouching. Her debut album "Ctrl" (2017) is a chronicle of self-doubt, complicated relationships, searching for identity.</p><blockquote>"I wanted young girls to hear: what you feel is normal. You don't have to hide it." — SZA</blockquote><h2 id="s4">Blood Orange and the Art Approach</h2><p>Dev Hynes (Blood Orange) is perhaps the most experimental voice in Alt R&B. His projects exist at the intersection of R&B, disco, post-punk and conceptual art.</p><h2 id="s5">Why Does It Matter?</h2><p>Alt R&B broadened the vocabulary of music about Black experience, including voices that previously didn't fit the format: queer artists, introverts, outsiders, philosophers.</p><p>It proved that R&B is not a formula, but a point of view — expressible by the most diverse means while remaining deeply recognizable.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Previous</span><a href="learn.html?id=neosoul">← Neo Soul</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Next</span><a href="learn.html?id=glossary">Key Terms →</a></div></div>`
+    },
+    tr:{ tag:"Modern", title:"Alt R&B: Sınır Tanımayan Tür", time:"9 dk okuma",
+      toc:[{href:"#s1",text:"Alt R&B Nedir?"},{href:"#s2",text:"Frank Ocean — Dönüm Noktası"},{href:"#s3",text:"SZA ve Kadın Bakışı"},{href:"#s4",text:"Blood Orange ve Sanat Yaklaşımı"},{href:"#s5",text:"Neden Önemli?"}],
+      html:`<p>Alternatif R&B katı kuralları olan bir alt tür değil. Daha çok bir tutum: R&B'nin ne olduğunu düşünmeden R&B müziği yapmak. Sonuç — 21. yüzyılın en ilginç kayıtlarından bazıları.</p><h2 id="s1">Alt R&B Nedir?</h2><p>Terim 2010'ların başında müzik basınında ortaya çıktı. R&B'nin duygusal ve vokal dilini kullanan ama bunu elektronik müzik, indie rock, caz, hip-hop ile birleştiren sanatçıları tanımlar. Ses genellikle daha soğuk, daha içe dönük, tempolar daha yavaş.</p><h2 id="s2">Frank Ocean — Dönüm Noktası</h2><p>"Channel Orange" (2012) R&B'nin ne olabileceğini değiştirdi. Frank Ocean karşılıksız aşk, nostalji, sınıf çelişkileri hakkında sinematografik detaylarla yazdı.</p><div class="highlight-box"><strong>"Blonde" (2016)</strong> "Channel Orange" bir kapı açtıysa, "Blonde" duvarları yıktı. Sürekli değişen dokulardan oluşan 45 dakika — on yılın en çok tartışılan albümlerinden biri.</div><h2 id="s3">SZA ve Kadın Bakışı</h2><blockquote>"Genç kızların duymasını istedim: hissettiğin şey normal. Saklamak zorunda değilsin." — SZA</blockquote><h2 id="s4">Blood Orange ve Sanat Yaklaşımı</h2><p>Dev Hynes (Blood Orange) Alt R&B'nin en deneysel sesi. Projeleri R&B, disco, post-punk ve kavramsal sanatın kesişiminde var oluyor.</p><h2 id="s5">Neden Önemli?</h2><p>Alt R&B, R&B'nin bir formül değil, bir bakış açısı olduğunu kanıtladı.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Önceki</span><a href="learn.html?id=neosoul">← Neo Soul</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Sonraki</span><a href="learn.html?id=glossary">Terimler →</a></div></div>`
+    },
+    kz:{ tag:"Қазіргі заман", title:"Alt R&B: шексіз жанр", time:"9 мин оқу",
+      toc:[{href:"#s1",text:"Alt R&B дегеніміз не?"},{href:"#s2",text:"Frank Ocean — бетбұрыс сәт"},{href:"#s3",text:"SZA және әйел көзқарасы"},{href:"#s4",text:"Blood Orange және өнер тәсілі"},{href:"#s5",text:"Неліктен бұл маңызды?"}],
+      html:`<p>Балама R&B — қатаң ережелері бар қосалқы жанр емес. Бұл — R&B-нің не екенін ойламай R&B музыкасын жасау ұстанымы. Нәтиже — XXI ғасырдың ең қызықты жазбалары.</p><h2 id="s1">Alt R&B дегеніміз не?</h2><p>Термин 2010-жылдардың басында пайда болды. R&B-нің эмоционалды тілін электрондық музыкамен, инди-рокпен, джазбен үйлестіретін орындаушыларды сипаттайды. Дыбыс көбінесе суықтау, интроспективтірек; қарқын баяулау.</p><h2 id="s2">Frank Ocean — бетбұрыс сәт</h2><p>«Channel Orange» (2012) R&B не бола алатынын өзгертті. Frank Ocean орындалмаған махаббат, ностальгия, сынып қайшылықтары туралы кинематографиялық егжей-тегжеймен жазды.</p><div class="highlight-box"><strong>«Blonde» (2016)</strong> «Channel Orange» есік ашса, «Blonde» қабырғаларды ұрды. Үнемі өзгеретін текстурадан тұратын 45 минут — он жылдың ең талқыланған альбомдарының бірі.</div><h2 id="s3">SZA және әйел көзқарасы</h2><blockquote>«Жас қыздар естісін деп қалдым: сен сезетін нәрсе — қалыпты. Оны жасыру керек емес» — SZA</blockquote><h2 id="s4">Blood Orange және өнер тәсілі</h2><p>Dev Hynes (Blood Orange) — Alt R&B-дегі ең эксперименталды дауыс. Оның жобалары R&B, диско, постпанк және концептуалды өнердің қиылысында өмір сүреді.</p><h2 id="s5">Неліктен бұл маңызды?</h2><p>Alt R&B R&B-нің формула емес, көзқарас екенін дәлелдеді.</p><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Алдыңғы</span><a href="learn.html?id=neosoul">← Neo Soul</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Келесі</span><a href="learn.html?id=glossary">Терминдер →</a></div></div>`
+    }
+  },
+  glossary: {
+    en:{ tag:"Glossary", title:"Key R&B Terms and Concepts", time:"6 min read",
+      toc:[{href:"#s1",text:"Vocal Terms"},{href:"#s2",text:"Rhythm and Groove"},{href:"#s3",text:"Track Structure"},{href:"#s4",text:"Production and Sound"}],
+      html:`<p>R&B has its own language — specific terms used by musicians, critics, and fans. This glossary will help you navigate conversations about the genre.</p><h2 id="s1">Vocal Terms</h2><table class="lp-glossary"><thead><tr><th>Term</th><th>Definition</th><th>Example</th></tr></thead><tbody><tr><td class="term">Melisma</td><td>Singing multiple notes on one syllable. Creates emotional richness.</td><td>Whitney Houston — "I Will Always Love You"</td></tr><tr><td class="term">Run</td><td>A fast vocal run up or down — a type of melisma.</td><td>Mariah Carey, Beyoncé</td></tr><tr><td class="term">Ad-lib</td><td>Improvised inserts over the main vocal: exclamations, repetitions, unexpected phrases.</td><td>"Yeah", "C'mon" by James Brown</td></tr><tr><td class="term">Falsetto</td><td>Singing above the natural voice register. Creates vulnerability or tenderness.</td><td>The Weeknd, Prince</td></tr><tr><td class="term">Vibrato</td><td>Rapid pitch fluctuation. Adds warmth and depth.</td><td>Ariana Grande, Erykah Badu</td></tr><tr><td class="term">Belting</td><td>Powerful singing in a high register with full voice.</td><td>Aretha Franklin, Beyoncé</td></tr></tbody></table><h2 id="s2">Rhythm and Groove</h2><table class="lp-glossary"><thead><tr><th>Term</th><th>Definition</th><th>Example</th></tr></thead><tbody><tr><td class="term">Backbeat</td><td>Accent on weak beats (2 and 4). Basic rhythmic principle of R&B.</td><td>Almost any R&B track</td></tr><tr><td class="term">Groove</td><td>The informal term for the feeling of rhythmic elasticity that "makes you move".</td><td>James Brown — "Sex Machine"</td></tr><tr><td class="term">Syncopation</td><td>Accent on the weak part of the beat. Creates rhythmic unpredictability.</td><td>Most R&B bass lines</td></tr><tr><td class="term">Laid-back</td><td>Rhythmic "lagging" — some elements slightly after the beat.</td><td>D'Angelo "Voodoo"</td></tr><tr><td class="term">Pocket</td><td>A musician "plays in the pocket" when their rhythm perfectly matches the groove.</td><td>Questlove (The Roots)</td></tr></tbody></table><h2 id="s3">Track Structure</h2><table class="lp-glossary"><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">Bridge</td><td>A section contrasting with verse and chorus — usually once, before the final chorus. Creates an emotional turning point.</td></tr><tr><td class="term">Breakdown</td><td>A moment where most instruments "drop out", leaving minimal texture. Intensifies the next section.</td></tr><tr><td class="term">Hook</td><td>A memorable musical or vocal phrase — usually the chorus or part of it.</td></tr><tr><td class="term">Outro</td><td>The closing section of a track. In R&B often contains fade-out with ad-lib improvisation.</td></tr><tr><td class="term">Interlude</td><td>A short transitional track on an album — speech, instrumental, atmosphere.</td></tr></tbody></table><h2 id="s4">Production and Sound</h2><table class="lp-glossary"><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td class="term">Sample</td><td>A fragment of an existing recording used in a new track. Often the foundation of hip-hop and R&B beats.</td></tr><tr><td class="term">Trap hi-hat</td><td>Fast, "rattling" hi-hats characteristic of trap influence in modern R&B.</td></tr><tr><td class="term">808</td><td>Bass drum from Roland TR-808 — the foundation of modern R&B and hip-hop bass.</td></tr><tr><td class="term">Auto-Tune</td><td>Vocal processing for correction or artistic effect. In R&B often used as an expressive tool.</td></tr><tr><td class="term">Wet / Dry</td><td>Amount of reverb/delay in the sound. "Wet" — lots of effects, "dry" — clean sound.</td></tr></tbody></table><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Previous</span><a href="learn.html?id=altrnb">← Alt R&B</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Start over</span><a href="learn.html?id=history">R&B Origins →</a></div></div>`
+    },
+    tr:{ tag:"Sözlük", title:"R&B'de Temel Terimler ve Kavramlar", time:"6 dk okuma",
+      toc:[{href:"#s1",text:"Vokal Terimleri"},{href:"#s2",text:"Ritim ve Groove"},{href:"#s3",text:"Parça Yapısı"},{href:"#s4",text:"Prodüksiyon ve Ses"}],
+      html:`<p>R&B'nin kendi dili var — müzisyenler, eleştirmenler ve hayranlar tarafından kullanılan özel terimler. Bu sözlük, tür hakkındaki konuşmalarda yönünüzü bulmanıza yardımcı olacak.</p><h2 id="s1">Vokal Terimleri</h2><table class="lp-glossary"><thead><tr><th>Terim</th><th>Tanım</th><th>Örnek</th></tr></thead><tbody><tr><td class="term">Melizma</td><td>Bir hece üzerinde birden fazla nota söylemek. Duygusal yoğunluk yaratır.</td><td>Whitney Houston — "I Will Always Love You"</td></tr><tr><td class="term">Run</td><td>Yukarı veya aşağı hızlı vokal koşusu — bir melizma türü.</td><td>Mariah Carey, Beyoncé</td></tr><tr><td class="term">Ad-lib</td><td>Ana vocalin üzerine doğaçlama eklemeler: ünlemler, tekrarlar, beklenmedik ifadeler.</td><td>James Brown'ın "Yeah", "C'mon"</td></tr><tr><td class="term">Falsetto</td><td>Doğal ses kaydının üzerinde şarkı söylemek. Kırılganlık veya yumuşaklık hissi yaratır.</td><td>The Weeknd, Prince</td></tr><tr><td class="term">Vibrato</td><td>Hızlı ses yüksekliği dalgalanması. Sıcaklık ve derinlik katar.</td><td>Ariana Grande, Erykah Badu</td></tr><tr><td class="term">Belting</td><td>Yüksek tonda tam sesle güçlü şarkı söylemek.</td><td>Aretha Franklin, Beyoncé</td></tr></tbody></table><h2 id="s2">Ritim ve Groove</h2><table class="lp-glossary"><thead><tr><th>Terim</th><th>Tanım</th><th>Örnek</th></tr></thead><tbody><tr><td class="term">Backbeat</td><td>Zayıf vuruşlara (2 ve 4) vurgu. R&B'nin temel ritmik ilkesi.</td><td>Neredeyse her R&B parçası</td></tr><tr><td class="term">Groove</td><td>Sizi hareket ettiren ritmik esneklik hissi için gayri resmi terim.</td><td>James Brown — "Sex Machine"</td></tr><tr><td class="term">Senkop</td><td>Vuruşun zayıf kısmına vurgu. Ritmik öngörülemezlik yaratır.</td><td>Çoğu R&B bas hattı</td></tr><tr><td class="term">Laid-back</td><td>Ritmik "gecikme" — bazı unsurlar vuruştan biraz sonra.</td><td>D'Angelo "Voodoo"</td></tr></tbody></table><h2 id="s3">Parça Yapısı</h2><table class="lp-glossary"><thead><tr><th>Terim</th><th>Tanım</th></tr></thead><tbody><tr><td class="term">Bridge</td><td>Nakarat ve kıtayla kontrast oluşturan bölüm — genellikle son nakarattan önce bir kez. Duygusal dönüm noktası yaratır.</td></tr><tr><td class="term">Breakdown</td><td>Çoğu enstrümanın "düştüğü" an, minimal doku bırakır. Sonraki bölümü güçlendirir.</td></tr><tr><td class="term">Hook</td><td>Akılda kalıcı müzikal veya vokal ifade — genellikle nakarat veya parçası.</td></tr><tr><td class="term">Outro</td><td>Parçanın kapanış bölümü. R&B'de genellikle ad-lib doğaçlamasıyla fade-out içerir.</td></tr></tbody></table><h2 id="s4">Prodüksiyon ve Ses</h2><table class="lp-glossary"><thead><tr><th>Terim</th><th>Tanım</th></tr></thead><tbody><tr><td class="term">Sample</td><td>Yeni bir parçada kullanılan mevcut kayıttan bir parça.</td></tr><tr><td class="term">808</td><td>Roland TR-808'den bas davul — modern R&B ve hip-hop basının temeli.</td></tr><tr><td class="term">Auto-Tune</td><td>Düzeltme veya artistik etki için vokal işleme. R&B'de ifade aracı olarak kullanılır.</td></tr><tr><td class="term">Wet / Dry</td><td>Sesteki reverb/delay miktarı. "Wet" — çok efekt, "dry" — temiz ses.</td></tr></tbody></table><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Önceki</span><a href="learn.html?id=altrnb">← Alt R&B</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Başa dön</span><a href="learn.html?id=history">R&B Kökenleri →</a></div></div>`
+    },
+    kz:{ tag:"Сөздік", title:"R&B негізгі терминдері мен ұғымдары", time:"6 мин оқу",
+      toc:[{href:"#s1",text:"Вокалдық терминдер"},{href:"#s2",text:"Ырғақ және грув"},{href:"#s3",text:"Трек құрылымы"},{href:"#s4",text:"Продакшн және дыбыс"}],
+      html:`<p>R&B-нің өзіндік тілі бар — музыканттар, сыншылар мен жанкүйерлер пайдаланатын арнайы терминдер. Бұл сөздік жанр туралы сөйлесулерде бағдарлануға көмектеседі.</p><h2 id="s1">Вокалдық терминдер</h2><table class="lp-glossary"><thead><tr><th>Термин</th><th>Анықтама</th><th>Мысал</th></tr></thead><tbody><tr><td class="term">Мелизма</td><td>Бір буынды бірнеше нота арқылы айту. Эмоционалды байлық туғызады.</td><td>Whitney Houston — "I Will Always Love You"</td></tr><tr><td class="term">Run</td><td>Жылдам вокалдық жүгіру жоғары немесе төмен — мелизма түрі.</td><td>Mariah Carey, Beyoncé</td></tr><tr><td class="term">Ad-lib</td><td>Негізгі вокал үстіне импровизациялық кірістірулер: леп, қайталаулар.</td><td>James Brown-ның «Yeah»</td></tr><tr><td class="term">Falsetto</td><td>Табиғи дауыс регистрінен жоғары айту. Осалдық немесе нәзіктік сезімін туғызады.</td><td>The Weeknd, Prince</td></tr><tr><td class="term">Vibrato</td><td>Жылдам биіктік тербелісі. Жылулық пен тереңдік қосады.</td><td>Ariana Grande, Erykah Badu</td></tr><tr><td class="term">Belting</td><td>Жоғары регистрде толық дауыспен қуатты айту.</td><td>Aretha Franklin, Beyoncé</td></tr></tbody></table><h2 id="s2">Ырғақ және грув</h2><table class="lp-glossary"><thead><tr><th>Термин</th><th>Анықтама</th><th>Мысал</th></tr></thead><tbody><tr><td class="term">Backbeat</td><td>Әлсіз үлестерге (2 және 4) екпін. R&B-нің негізгі ырғақтық принципі.</td><td>Кез-келген R&B трегі</td></tr><tr><td class="term">Грув</td><td>Сені қозғалтатын ырғақтық серпімділік сезімі.</td><td>James Brown — "Sex Machine"</td></tr><tr><td class="term">Синкопа</td><td>Үлестің әлсіз бөлігіне екпін. Ырғақтық болжамсыздық туғызады.</td><td>Көптеген R&B бас-линиялары</td></tr><tr><td class="term">Laid-back</td><td>Ырғақтық «кешігу» — кейбір элементтер үлестен сәл кейін.</td><td>D'Angelo «Voodoo»</td></tr></tbody></table><h2 id="s3">Трек құрылымы</h2><table class="lp-glossary"><thead><tr><th>Термин</th><th>Анықтама</th></tr></thead><tbody><tr><td class="term">Bridge</td><td>Куплет пен рефренмен қарама-қарсы бөлім — соңғы рефреннен бұрын. Эмоционалды бетбұрыс туғызады.</td></tr><tr><td class="term">Breakdown</td><td>Аспаптардың көпшілігі «түсетін» сәт, минималды текстура қалады.</td></tr><tr><td class="term">Hook</td><td>Есте қалатын музыкалық немесе вокалдық фраза — әдетте рефрен.</td></tr><tr><td class="term">Outro</td><td>Трек аяқтаушы бөлімі. R&B-де жиі ad-lib импровизациясымен fade-out болады.</td></tr></tbody></table><h2 id="s4">Продакшн және дыбыс</h2><table class="lp-glossary"><thead><tr><th>Термин</th><th>Анықтама</th></tr></thead><tbody><tr><td class="term">Сэмпл</td><td>Жаңа тректе пайдаланылған бар жазбадан үзінді.</td></tr><tr><td class="term">808</td><td>Roland TR-808-ден бас-барабан — қазіргі R&B және хип-хоп басының негізі.</td></tr><tr><td class="term">Автотюн</td><td>Түзету немесе көркемдік эффект үшін вокал өңдеу. R&B-де экспрессивті құрал ретінде қолданылады.</td></tr><tr><td class="term">Wet / Dry</td><td>Дыбыстағы reverb/delay мөлшері. «Wet» — көп эффект, «dry» — таза дыбыс.</td></tr></tbody></table><div class="lp-nav-bottom"><div class="lp-nav-btn"><span>Алдыңғы</span><a href="learn.html?id=altrnb">← Alt R&B</a></div><div class="lp-nav-btn lp-nav-btn--right"><span>Басына оралу</span><a href="learn.html?id=history">R&B бастауы →</a></div></div>`
+    }
+  }
+};
+Object.keys(ARTICLES_I18N).forEach(id => { if(ARTICLES[id]) ARTICLES[id].i18n = ARTICLES_I18N[id]; });
+
+/* Хук при смене языка — перерендерим страницу */
+function onLangChanged(lang) {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  if (!id) renderList();
+  else if (ARTICLES[id]) renderArticle(ARTICLES[id]);
+}
+
+
+const ORDER = ["history","theory","neosoul","altrnb","glossary"];
+
+/* ══════════════════════════════════════════
+   РОУТЕР
+══════════════════════════════════════════ */
+const params    = new URLSearchParams(window.location.search);
+const articleId = params.get("id");
+
+if (!articleId) {
+  renderList();
+} else if (ARTICLES[articleId]) {
+  renderArticle(ARTICLES[articleId]);
+} else {
+  document.getElementById("lpNotFound").style.display = "flex";
+  document.title = "Статья не найдена — R&B Archive";
+}
+
+/* ══════════════════════════════════════════
+   РЕНДЕР СПИСКА
+══════════════════════════════════════════ */
+function getLoc(a) {
+  const lang = window.currentLang || localStorage.getItem("rbarchive_lang") || "ru";
+  return (a.i18n && a.i18n[lang]) ? Object.assign({}, a, a.i18n[lang]) : a;
+}
+
+function renderList() {
+  const lang = window.currentLang || localStorage.getItem("rbarchive_lang") || "ru";
+  const titles   = { ru:"Обучение", en:"Education", tr:"Eğitim", kz:"Оқу" };
+  const readBtns = { ru:"Читать →", en:"Read →", tr:"Oku →", kz:"Оқу →" };
+  document.getElementById("lpList").style.display = "block";
+  document.title = (titles[lang]||"Обучение") + " — R&B Archive";
+  const grid = document.getElementById("lpListGrid");
+  grid.innerHTML = "";
+  ORDER.forEach(id => {
+    const loc = getLoc(ARTICLES[id]);
+    const card = document.createElement("a");
+    card.href = `learn.html?id=${loc.id}`;
+    card.className = "lp-list-card";
+    card.innerHTML = `
+      <div class="lp-list-card__tag">${loc.tag}</div>
+      <h3 class="lp-list-card__title">${loc.title}</h3>
+      <p class="lp-list-card__desc">${getDesc(loc)}</p>
+      <div class="lp-list-card__foot">
+        <span class="lp-list-card__time">🕐 ${loc.time}</span>
+        <span class="btn btn--ghost btn--sm">${readBtns[lang]||"Читать →"}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function getDesc(a) {
+  const tmp = document.createElement("div");
+  tmp.innerHTML = a.html;
+  const p = tmp.querySelector("p");
+  return p ? p.textContent.slice(0, 130) + "…" : "";
+}
+
+/* ══════════════════════════════════════════
+   РЕНДЕР СТАТЬИ
+══════════════════════════════════════════ */
+function renderArticle(a) {
+  const loc = getLoc(a);
+  document.title = `${loc.title} — R&B Archive`;
+  document.getElementById("lpMain").style.display = "block";
+
+  document.getElementById("lpHeroBg").style.background = a.bg;
+  document.getElementById("lpTag").textContent   = loc.tag;
+  document.getElementById("lpTitle").textContent = loc.title;
+
+  const meta = document.getElementById("lpMeta");
+  meta.innerHTML = `
+    <span class="lp-meta__item">🕐 ${loc.time}</span>
+    <span class="lp-meta__item">📅 ${a.date}</span>
+    <span class="lp-meta__item">📚 R&amp;B Archive</span>
+  `;
+
+  document.getElementById("lpContent").innerHTML = loc.html;
+
+  const toc = document.getElementById("lpToc");
+  toc.innerHTML = "";
+  loc.toc.forEach(item => {
+    const li = document.createElement("li");
+    li.innerHTML = `<a href="${item.href}">${item.text}</a>`;
+    toc.appendChild(li);
+  });
+
+  const rel = document.getElementById("lpRelated");
+  rel.innerHTML = "";
+  ORDER.filter(id => id !== a.id).forEach(id => {
+    const rloc = getLoc(ARTICLES[id]);
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <a href="learn.html?id=${rloc.id}">
+        <span class="lp-related-tag">${rloc.tag}</span>
+        ${rloc.title}
+      </a>
+    `;
+    rel.appendChild(li);
+  });
+
+  /* Scroll-reveal для контента */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("in-view"); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll(".lp-content h2, .lp-content p, .lp-content blockquote, .lp-content .highlight-box, .lp-glossary tr").forEach(el => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(16px)";
+    el.style.transition = "opacity .4s ease, transform .4s ease";
+    observer.observe(el);
+  });
+
+  /* Добавляем in-view стили */
+  const style = document.createElement("style");
+  style.textContent = ".in-view { opacity: 1 !important; transform: none !important; }";
+  document.head.appendChild(style);
+}
+
+/* ── Header scroll ── */
+window.addEventListener("scroll", () => {
+  document.getElementById("header").classList.toggle("scrolled", window.scrollY > 10);
+});
+
+/* ── Burger ── */
+document.getElementById("burger").addEventListener("click", () => {
+  document.getElementById("nav").classList.toggle("open");
+});
+</script>
+<script src="i18n.js"></script>
+<script src="rbauth.js"></script>
+</body>
+</html>

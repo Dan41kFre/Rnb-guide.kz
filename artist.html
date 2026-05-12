@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Артист — R&B Archive</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="artist.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════════════════ -->
+<header class="header scrolled" id="header">
+  <div class="header__inner">
+    <a href="index.html" class="logo">
+      <span class="logo__icon">◈</span>
+      <span class="logo__text">R&amp;B <span class="logo__accent">Archive</span></span>
+    </a>
+    <nav class="nav" id="nav">
+      <ul class="nav__list">
+        <li><a href="index.html"             class="nav__link" data-i18n="nav.home">Главная</a></li>
+        <li><a href="index.html#artists"     class="nav__link nav__link--active" data-i18n="nav.artists">Артисты</a></li>
+        <li><a href="index.html#newreleases" class="nav__link" data-i18n="nav.new">Новинки</a></li>
+        <li><a href="index.html#learn"       class="nav__link" data-i18n="nav.learn">Обучение</a></li>
+        <li><a href="index.html#playlists"   class="nav__link" data-i18n="nav.playlists">Плейлисты</a></li>
+        <li><a href="index.html#news"        class="nav__link" data-i18n="nav.news">Новости</a></li>
+      </ul>
+    </nav>
+    <div class="header__search">
+      <span class="search-icon">⌕</span>
+      <input type="text" class="header__search-input" placeholder="Поиск артистов, треков…"/>
+    </div>
+    <div class="header__right">
+      <button class="btn btn--ghost btn--sm"   onclick="location.href='auth.html'" data-i18n="auth.login">Вход</button>
+      <button class="btn btn--primary btn--sm" onclick="location.href='auth.html?tab=register'" data-i18n="auth.register">Регистрация</button>
+    
+      <div class="lang-switch">
+        <button class="lang-btn lang-btn--active" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="tr">TR</button>
+        <button class="lang-btn" data-lang="kz">KZ</button>
+      </div>
+    </div>
+    <button class="burger" id="burger" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════ NOT FOUND ══════════════════════════= -->
+<div class="ap-notfound" id="apNotFound" style="display:none">
+  <span class="ap-notfound__icon">◈</span>
+  <h1 data-i18n="artist.notfound">Артист не найден</h1>
+  <p data-i18n="artist.notfound.sub">Проверь URL или вернись на главную</p>
+  <a href="index.html" class="btn btn--primary btn--lg" data-i18n="artist.tohome">← На главную</a>
+</div>
+
+<!-- ═══════════════════ MAIN CONTENT ══════════════════════= -->
+<main id="apMain" style="display:none">
+
+  <!-- Hero -->
+  <section class="ap-hero">
+    <div class="ap-hero__bg" id="apHeroBg"></div>
+    <div class="ap-hero__overlay"></div>
+    <div class="container ap-hero__inner">
+      <a href="index.html#artists" class="ap-back" data-i18n="artist.back">← Назад к артистам</a>
+      <div class="ap-hero__content">
+        <div class="ap-hero__photo-wrap">
+          <img id="apPhoto" src="" alt="" class="ap-hero__photo"/>
+          <div class="ap-hero__photo-fb" id="apPhotoFb"></div>
+        </div>
+        <div class="ap-hero__info">
+          <span class="ap-genre" id="apGenre"></span>
+          <h1 class="ap-name" id="apName"></h1>
+          <div class="ap-chips">
+            <span class="ap-chip" id="apCountry"></span>
+            <span class="ap-chip" id="apYears"></span>
+            <span class="ap-chip" id="apAwards"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bio + Achievements -->
+  <section class="ap-info">
+    <div class="container ap-info__grid">
+      <div>
+        <h2 class="ap-section-title" data-i18n="artist.bio">Биография</h2>
+        <div class="ap-bio" id="apBio"></div>
+      </div>
+      <div>
+        <h2 class="ap-section-title" data-i18n="artist.achieve">Достижения</h2>
+        <ul class="ap-achlist" id="apAchList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Songs — идентичный стиль блоку «Новинки» из index.html -->
+  <section class="newreleases" id="apSongsSection">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="artist.tracks">Треки</h2>
+      </div>
+      <div class="newreleases__grid" id="apSongsGrid"></div>
+    </div>
+  </section>
+
+  <!-- Мне нравится -->
+  <section class="playlists" id="playlists">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="artist.liked">♡ Мне нравится</h2>
+        <span class="section-link" id="likedCount">0 треков</span>
+      </div>
+      <div class="playlist-empty" id="playlistEmpty">
+        <p data-i18n="artist.liked.empty">Нажми ♡ на любом треке, чтобы добавить его сюда</p>
+      </div>
+      <ul class="playlist-list" id="playlistList"></ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__accent-bar"></div>
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="logo"><span class="logo__icon">◈</span><span class="logo__text">R&amp;B <span class="logo__accent">Archive</span></span></a>
+        <p class="footer__desc" data-i18n="footer.desc">Электронный учебный ресурс о Rhythm &amp; Blues — история, артисты, культура.</p>
+        <div class="footer__socials">
+          <a href="https://vk.com" class="social-btn" aria-label="VK"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.6c-.6 0-.79-.48-1.87-1.57-1-.93-1.39-1.06-1.63-1.06-.33 0-.43.1-.43.57v1.44c0 .4-.13.64-1.19.64-1.75 0-3.7-1.06-5.07-3.03C5.11 10.41 4.5 8.5 4.5 8.06c0-.24.1-.46.57-.46H6.7c.43 0 .59.2.75.66.83 2.4 2.2 4.5 2.77 4.5.21 0 .31-.1.31-.64V9.64c-.07-1.15-.67-1.25-.67-1.66 0-.2.16-.4.42-.4h2.52c.36 0 .48.19.48.6v3.24c0 .36.16.48.26.48.21 0 .38-.12.76-.5 1.18-1.32 2.02-3.35 2.02-3.35.11-.24.31-.46.74-.46h1.6c.48 0 .59.25.48.6-.2.93-2.1 3.6-2.1 3.6-.17.27-.23.4 0 .7.17.23.72.7 1.09 1.13.68.77 1.2 1.41 1.34 1.86.13.44-.1.67-.55.67z"/></svg></a>
+          <a href="https://www.instagram.com" class="social-btn" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="https://www.youtube.com" class="social-btn" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__heading" data-i18n="footer.nav">Навигация</h4>
+        <ul class="footer__links">
+          <li><a href="index.html" data-i18n="nav.home">Главная</a></li>
+          <li><a href="index.html#artists" data-i18n="nav.artists">Артисты</a></li>
+          <li><a href="index.html#newreleases" data-i18n="nav.new">Новинки</a></li>
+          <li><a href="learn.html" data-i18n="nav.learn">Обучение</a></li>
+          <li><a href="index.html#playlists" data-i18n="nav.playlists">Плейлисты</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__heading" data-i18n="footer.contacts">Контакты</h4>
+        <ul class="footer__contacts">
+          <li><span class="footer__contact-icon">✉</span><a href="mailto:rbarchive@edu.kz">rbarchive@edu.kz</a></li>
+          <li><span class="footer__contact-icon">✆</span>+7 (700) 000-00-00</li>
+          <li><span class="footer__contact-icon">◎</span><span data-i18n="footer.city">Казахстан, Караганда</span></li>
+        </ul>
+        <div class="footer__lang">
+          <span class="footer__lang-label" data-i18n="footer.lang">Язык:</span>
+          <button class="lang-btn lang-btn--active" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="tr">TR</button>
+          <button class="lang-btn" data-lang="kz">KZ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <div class="container footer__bottom-inner">
+      <p data-i18n="footer.copy">© 2025 R&amp;B Archive. Дипломная работа. Все права защищены.</p>
+      <p class="footer__bottom-made" data-i18n="footer.made">Сделано с ♥ для R&amp;B культуры</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════ МИНИ-ПЛЕЕР ════════════════════ -->
+<div class="player-overlay" id="playerOverlay" onclick="closePlayer()"></div>
+
+<div class="mini-player" id="barPlayer">
+  <button class="mini-player__close" onclick="closePlayer()">✕</button>
+  <div class="mini-player__cover">
+    <div class="mini-player__cover-bg" id="miniCoverBg"></div>
+    <img class="mini-player__cover-img" id="barPlayerImg" src="" alt="" onerror="this.style.display='none'"/>
+    <div class="mini-player__cover-overlay"></div>
+  </div>
+  <div class="mini-player__body">
+    <div class="mini-player__meta">
+      <div class="mini-player__thumb" id="barPlayerThumb">
+        <img id="miniThumbImg" src="" alt="" onerror="this.style.display='none'"/>
+      </div>
+      <div class="mini-player__text">
+        <div class="mini-player__title" id="barPlayerTitle">—</div>
+        <div class="mini-player__artist" id="barPlayerArtist"><a href="#" class="mini-player__artist-main">—</a></div>
+      </div>
+      <button class="mini-player__heart" id="barHeartBtn" onclick="toggleLikePlayer()">
+        <svg id="barHeartOutline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <svg id="barHeartFilled" viewBox="0 0 24 24" fill="var(--accent-2)" style="display:none">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="mini-player__progress">
+      <span class="mini-player__time" id="barCurrentTime">0:00</span>
+      <div class="mini-player__bar" id="barProgressBar">
+        <div class="mini-player__bar-track"></div>
+        <div class="mini-player__bar-fill" id="barProgressFill"></div>
+        <div class="mini-player__bar-thumb" id="barProgressThumb"></div>
+      </div>
+      <span class="mini-player__time" id="barTotalTime">0:00</span>
+    </div>
+    <div class="mini-player__controls">
+      <button class="mp-btn" onclick="skipBack()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="7.5" y="15" font-size="5.5" font-weight="bold" fill="currentColor" font-family="sans-serif">15</text></svg>
+      </button>
+      <button class="mp-btn mp-btn--play" id="barPlayBtn" onclick="togglePlay()">
+        <svg id="barIconPlay"  viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="barIconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+      </button>
+      <button class="mp-btn" onclick="skipForward()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.01 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/><text x="8.5" y="15" font-size="5.5" font-weight="bold" fill="currentColor" font-family="sans-serif">15</text></svg>
+      </button>
+
+      <!-- Громкость — горизонтальный слайдер -->
+      <div class="vol-row" id="volWidget">
+        <button class="mp-btn--vol" id="barVolBtn" aria-label="Громкость" onclick="toggleMute()">
+          <svg id="barVolIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+          <svg id="barVolLowIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+          <svg id="barVolMuteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+        </button>
+        <div class="vol-row__bar" id="barVolBar">
+          <div class="vol-row__track"></div>
+          <div class="vol-row__fill" id="barVolFill"></div>
+          <div class="vol-row__thumb" id="barVolThumb"></div>
+        </div>
+        <span class="vol-row__pct" id="barVolPct">80%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- скрытый YouTube контейнер -->
+<div id="yt-player" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;"></div>
+
+<script src="i18n.js"></script>
+<script src="artists-data.js"></script>
+<script src="rbauth.js"></script>
+<script src="artist.js"></script>
+</body>
+</html>

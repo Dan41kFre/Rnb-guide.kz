@@ -1,0 +1,209 @@
+/* ============================================================
+   artist.css — стили ТОЛЬКО для artist.html
+   Базовые переменные и компоненты берутся из style.css
+   ============================================================ */
+
+body.has-bar-player { padding-bottom: 80px; }
+
+/* ── Feat. — коллаборация на карточке трека ── */
+.album-card__feat {
+  display: inline;
+  font-size: .78rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+.album-card__feat-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color .2s, text-decoration .2s;
+}
+.album-card__feat-link:hover {
+  color: var(--accent-2, #e91e8c);
+  text-decoration: underline;
+}
+
+
+
+/* ── Not Found ── */
+.ap-notfound {
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  padding: 40px 24px;
+}
+.ap-notfound__icon { font-size: 3.5rem; color: var(--accent); opacity: .4; }
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.ap-hero {
+  position: relative;
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-top: 80px;
+  overflow: hidden;
+}
+.ap-hero__bg {
+  position: absolute;
+  inset: 0;
+  filter: blur(60px) saturate(1.5);
+  transform: scale(1.12);
+  opacity: .45;
+}
+.ap-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10,10,12,.5) 0%, rgba(10,10,12,.94) 100%);
+}
+.ap-hero__inner {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 48px;
+}
+.ap-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 32px;
+  transition: color .2s;
+}
+.ap-back:hover { color: var(--accent); }
+
+.ap-hero__content {
+  display: flex;
+  align-items: flex-end;
+  gap: 32px;
+}
+
+/* Photo */
+.ap-hero__photo-wrap { flex-shrink: 0; }
+.ap-hero__photo {
+  width: 180px;
+  height: 180px;
+  border-radius: 14px;
+  object-fit: cover;
+  object-position: center top;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+  border: 2px solid rgba(255,255,255,.1);
+  display: block;
+}
+.ap-hero__photo-fb {
+  display: none;
+  width: 180px;
+  height: 180px;
+  border-radius: 14px;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.4);
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+
+/* Info */
+.ap-hero__info { flex: 1; }
+.ap-genre {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(124,58,237,.15);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin-bottom: 10px;
+}
+.ap-name {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.ap-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ap-chip {
+  font-size: .78rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 999px;
+  padding: 5px 13px;
+}
+
+/* ══════════════════════════════
+   BIO + ACHIEVEMENTS
+══════════════════════════════ */
+.ap-info {
+  padding: 64px 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+}
+.ap-info__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 52px;
+}
+.ap-section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+.ap-bio p {
+  font-size: .92rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.ap-bio p:last-child { margin-bottom: 0; }
+
+.ap-achlist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ap-achlist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: .88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.ap-dot { color: var(--accent); font-size: .65rem; flex-shrink: 0; margin-top: 4px; }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 768px) {
+  .ap-hero__content  { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .ap-hero__photo, .ap-hero__photo-fb { width: 120px; height: 120px; }
+  .ap-info__grid { grid-template-columns: 1fr; gap: 36px; }
+}
+@media (max-width: 480px) {
+  .ap-name { font-size: 1.7rem; }
+  .ap-hero { min-height: 340px; }
+}
